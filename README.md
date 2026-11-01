@@ -1,0 +1,282 @@
+# MagnetoLab
+
+Náučná hra o magnetizme – tímová semestrálna práca z predmetu **Multimediálne systémy** (UCM Trnava).
+
+---
+
+## 1. O projekte
+
+**MagnetoLab** je izometrická 2.5D hádanková (logická) hra s pohľadom zhora. Hráč prechádza
+miestnosťami laboratória, v každej nájde kľúč a otvorí dvere. Hádanky sa riešia magnetmi –
+hlavne magnetickou rukavicou, ktorá priťahuje a odpudzuje predmety.
+
+Hra má dva varianty (vyberajú sa na začiatku hry):
+
+| Variant | Pre koho | Témy |
+|---|---|---|
+| **A** | 4. ročník ZŠ, prírodoveda | čo magnet priťahuje, póly, magnetické pole, kompas |
+| **B** | 9. ročník ZŠ, fyzika | Zem ako magnet, pole vodiča a cievky s prúdom, elektromagnet |
+
+V každej miestnosti sa postupuje ako vo vede: **odhadni → vyskúšaj → kartička „Čo si zistil“**.
+
+### Príbeh
+Chlapec **Kubo** (10 rokov) zaspí pred testom z magnetizmu. V sne sa ocitne v laboratóriu
+**profesora Magnetóna**. Profesor sa mu prihovára z obrazoviek na stenách – kladie otázky,
+dáva nápovedy a vysvetľuje, čo Kubo zistil. Na konci sa Kubo zobudí a píše test.
+
+**Miro mapa projektu:** [DOPLNIŤ – odkaz na Miro]
+
+---
+
+## 2. Stav projektu
+
+### ✅ Hotové (prototyp)
+- **Mriežka a izometria** – herná logika beží na políčkach, `GridManager` vie, čo je na ktorom políčku.
+- **Hráč** – pohyb po mriežke (WASD / šípky), otočenie na mieste, krok po krátkej pauze.
+- **Bedne** podľa materiálu: drevo, železo, hliník, meď, plast; železná bedňa môže byť magnet s pólom S/J.
+  Rukou sa dá tlačiť len drevená bedňa, pri kovovej Magnetón povie, že je príliš ťažká.
+- **Magnetická rukavica** – vypnutá / S / J (medzerník, Q). Pôsobí na prvý objekt v smere pohľadu,
+  priťahuje železo oboma pólmi, magnety priťahuje alebo odpudzuje podľa pólov.
+- **Malé predmety** (kľúč, drevená kocka, plastová fľaša) – železné preletia k hráčovi do **inventára (6 slotov)**.
+- **Priepasť** – nedá sa na ňu vstúpiť, lúč rukavice cez ňu prejde.
+- **Dvere s kľúčom** (E), **tabuľa** (E), **spúšťacie oblasti** (dialóg pri vstupe).
+- **Dialógové okno** s portrétom Magnetóna (neutral / happy / surprised), otázky s možnosťami (1–3 alebo myš).
+- **HUD** s panelom inventára.
+- **Level A1 „Železo alebo nie?“** – celý bádateľský postup (otázka, spätná väzba po pokuse, kartička po otvorení dverí).
+- **R** = reštart miestnosti.
+- Grafika je zatiaľ **dočasná** (farebné tvary a placeholdery v `art/placeholders/`).
+
+### 🔧 Robí sa
+- [DOPLNIŤ – čo sa práve robí, napr. podľa GitHub Issues]
+
+### 📋 Ďalej
+1. **MVP – variant A:** miestnosti A2–A6, držanie pritiahnutej bedne rukavicou, tlačidlá na podlahe,
+   kompas, železné piliny, hlavné menu s výberom variantu, finálna grafika a zvuky, export do `.exe`.
+2. **Plná verzia – variant B:** miestnosti B1–B7 (vodič s prúdom, vypínač, elektromagnety, pohyblivé platformy).
+3. **Bonusy:** strážny robot, denník bádateľa, cutscény, záverečný test.
+
+---
+
+## 3. Tím a úlohy
+
+| Člen | Rola | Na čom robí |
+|---|---|---|
+| Lubo | programátor | [DOPLNIŤ] |
+| Matej | programátor | [DOPLNIŤ] |
+| Katka | grafika | [DOPLNIŤ] |
+| Roberta | grafika | [DOPLNIŤ] |
+
+**Úlohy a chyby** evidujeme v **GitHub Issues**: <https://github.com/lofasada/Magnetolab/issues>
+
+- Nová úloha alebo nájdená chyba = nový Issue (krátky názov, čo sa stalo, ako to zopakovať).
+- Kto na úlohe robí, priradí si ju (Assignees).
+
+---
+
+## 4. Pre programátorov
+
+### Inštalácia
+1. **Godot 4.7.2 – štandardná verzia** (nie .NET/C#). Stiahnuť z
+   <https://godotengine.org/download/archive/> → 4.7.2 → Windows, *Standard*. Je to jeden `.exe`,
+   netreba inštalovať – stačí ho rozbaliť napr. do `C:\Godot\`.
+   ⚠️ Používajte všetci **presne rovnakú verziu**, inak Godot mení súbory scén a vznikajú konflikty.
+2. **Git** – <https://git-scm.com/download/win> (pri inštalácii stačia predvolené voľby).
+3. Prvé nastavenie Gitu (raz, v termináli):
+   ```
+   git config --global user.name "Meno Priezvisko"
+   git config --global user.email "tvoj@email.sk"
+   ```
+
+### Naklonovanie a otvorenie
+```
+git clone https://github.com/lofasada/Magnetolab.git
+```
+1. Spusti Godot → **Import** → vyber súbor `project.godot` v naklonovanom priečinku → **Import & Edit**.
+2. Prvé otvorenie chvíľu trvá (Godot si vytvára priečinok `.godot/`).
+3. **F5** spustí hru (hlavná scéna je `scenes/levels/level_a1.tscn`), **F6** spustí práve otvorenú scénu.
+4. Po spustení skontroluj spodný panel **Output / Debugger** – nesmú tam byť chyby.
+
+### Ovládanie v hre
+| Kláves | Akcia |
+|---|---|
+| WASD / šípky | pohyb (iný smer = najprv len otočenie) |
+| Medzerník | rukavica zap / vyp |
+| Q | prepnúť pól S / J |
+| E | interakcia (dvere, tabuľa), v dialógu pokračovať |
+| Enter | v dialógu pokračovať |
+| 1–3 | výber odpovede |
+| R | reštart miestnosti |
+
+### Čo si prečítať ako prvé
+1. **`CLAUDE.md`** – pravidlá hry, fyziky a kódu. Je to hlavný návod projektu (aj pre Claude Code).
+2. **Architektúra mriežky** – hra nepoužíva fyzikálny engine. Každý objekt má pozíciu `Vector2i`
+   (políčko), izometria je len vykreslenie. Pohyb je animovaný cez `Tween`.
+3. **`scripts/grid_manager.gd`** (autoload `GridManager`) – jediný zdroj pravdy: čo stojí na ktorom
+   políčku, čo je stena / priepasť, prevod políčko ↔ pixely, hľadanie prvého objektu v rade (lúč).
+4. **`scripts/grid_object.gd`** (`GridObject`) – spoločný základ všetkých objektov na mriežke
+   (hráč, bedňa, predmet, dvere, tabuľa).
+5. **`scripts/level.gd`** (`Level`) – spoločný skript miestnosti: načíta mriežku, umiestni objekty,
+   pospája signály (inventár → HUD, dvere → kartička, bádateľský postup).
+6. **`scripts/magnetism.gd`** – všetky fyzikálne pravidlá magnetizmu na jednom mieste.
+
+### Štruktúra priečinkov
+```
+art/            grafika od grafikov (placeholders/ = dočasné obrázky)
+audio/          zvuky a hudba
+resources/      .tres – dáta: levely, dialógy, predmety, tileset, spoločné texty
+  characters/   magneton.tres (meno a portréty profesora)
+  items/        druhy malých predmetov (ItemData)
+  level_a1/     dáta a dialógy levelu A1
+scenes/
+  levels/       level_a1.tscn, test_room.tscn (skúšobná miestnosť)
+  objects/      player, box, item, door, info_sign, trigger_zone (+ ich skripty .gd)
+  ui/           dialog_box, hud
+scripts/        spoločné skripty: GridManager, GridObject, Level, Magnetism, dátové triedy
+```
+
+### Konvencie kódu
+- GDScript so **statickým typovaním**: `var speed: float = 2.0`, `func move(dir: Vector2i) -> void`.
+- `snake_case` pre súbory, premenné a funkcie, `PascalCase` pre `class_name`.
+- Krátke komentáre **po slovensky**, malé jasné funkcie, žiadne „magické čísla“ (pomenované konštanty).
+- `@export` pre veci, ktoré sa nastavujú v editore (materiál, pól...).
+- Objekty spolu komunikujú cez **signály**, nie cez pevné cesty k uzlom.
+- Texty pre hráča **nikdy natvrdo v kóde** – patria do `.tres` súborov.
+- Viac v `CLAUDE.md`.
+
+### Ako sa robí nový level
+1. Skopíruj priečinok dát (napr. `resources/level_a1/` → `resources/level_a2/`) a uprav texty:
+   - `level_a2.tres` (`LevelData`) – názov, `guess_check_item` (predmet, ktorého prvé pritiahnutie je pokus),
+     `guess_feedback` (spätná väzba pre každú možnosť, index od 0), `info_card` (kartička „Čo si zistil“),
+   - dialógy `DialogData` (otázka „odhadni“ je strana s `options`).
+2. Vytvor scénu `scenes/levels/level_a2.tscn` s rovnakou stavbou ako `level_a1.tscn`:
+   koreňový `Node2D` so skriptom `level.gd`, pod ním `Room` (TileMapLayer s tilesetom),
+   `Objects` (hráč a objekty, Y Sort), `Triggers`, `Camera2D`, `HUD`.
+3. V koreňovom uzle nastav v Inspectore `room_layer`, `player`, `hud` a `level_data`.
+4. Podlahu, steny a priepasti nakresli do `Room`; objekty vlož ako inštancie scén z `scenes/objects/`.
+5. Spusti scénu (F6) a skontroluj, či v konzole nie sú chyby.
+
+Prechod medzi levelmi a výber variantu zatiaľ neexistujú. [DOPLNIŤ, keď budú hotové]
+
+### Práca s Claude Code
+- Claude Code spúšťaj **v priečinku projektu** (tam, kde je `project.godot`), aby si načítal `CLAUDE.md`.
+- `CLAUDE.md` je jeho návod – keď sa zmenia pravidlá hry, uprav ho, nech AI vie, ako sa má správať.
+- Zadávaj malé kroky (jeden objekt / jedna funkcia), potom hru spusti a over.
+- Pred commitom si prečítaj, čo AI zmenila (`git diff`). Pozri aj časť [Použitie AI](#8-použitie-ai).
+
+---
+
+## 5. Pre grafikov
+
+### Štýl a technické pravidlá
+- **Izometria 2:1** – jedna dlaždica podlahy je kosoštvorec **64 × 32 px** (2 px do šírky, 1 px do výšky).
+- **Formát: PNG s priehľadným pozadím** (bez bieleho pozadia okolo predmetu).
+- Pohľad zhora-zboku, rovnaký uhol pre všetky objekty. Svetlo [DOPLNIŤ – odkiaľ, napr. zľava hore].
+- Kresli v skutočnej veľkosti alebo v presnom násobku (2×, 4×) – dohodnúť s programátormi. [DOPLNIŤ]
+- Farebná paleta / štýl (kreslený, pixel art...): [DOPLNIŤ]
+
+### Čo treba nakresliť
+
+| Čo | Rozmery | Pravidlá |
+|---|---|---|
+| **Dlaždice podlahy** | 64 × 32 px | kosoštvorec presne na hranu, vzor musí nadväzovať na susedné dlaždice |
+| **Steny** | šírka 64 px, výška [DOPLNIŤ] | zatiaľ je stena len plochá dlaždica; výšku a tvar steny dohodnúť |
+| **Priepasť** | 64 × 32 px | musí byť jasne odlíšená od podlahy (hráč na ňu nemôže vstúpiť) |
+| **Bedne** | šírka do 64 px, výška [DOPLNIŤ] | stoja na jednom políčku, spodok sedí na kosoštvorci 64 × 32 |
+| **Kubo** | šírka do 64 px, výška [DOPLNIŤ] | 4 diagonálne smery (pozri nižšie) |
+| **Kľúč a malé predmety** | 32 × 32 px | ten istý obrázok sa použije na zemi aj v inventári |
+| **Dvere** | šírka 64 px, výška [DOPLNIŤ] | 2 stavy: zatvorené (so zámkou) a otvorené |
+| **Portréty Magnetóna** | 128 × 128 px | 3 výrazy: neutral, happy, surprised |
+| **Ikony HUD / inventára** | 32 × 32 px (slot má 48 × 48) | čitateľné aj v malej veľkosti |
+| **Stavy rukavice** | [DOPLNIŤ] | vypnutá, zapnutá S, zapnutá J |
+
+**Bedne podľa materiálu** – musia sa dať na prvý pohľad rozlíšiť (hráč podľa toho rieši hádanky):
+- drevo (dá sa tlačiť rukou), železo, **magnet S**, **magnet J**, hliník, meď,
+  prípadne plast (v kóde existuje).
+- Póly: dohodnutá farba **S = červená, J = modrá** (tak sú aj v kóde) + písmeno S / J na bedni.
+- Hliník (svetlosivý) a železo (tmavosivé) sa nesmú pliesť – [DOPLNIŤ, čím ich odlíšime].
+
+**Kubo v 4 diagonálnych smeroch** – hráč sa na mriežke hýbe v 4 smeroch, ktoré na obrazovke
+vyzerajú šikmo: hore-vpravo, dole-vpravo, dole-vľavo, hore-vľavo. Každý smer = jeden obrázok
+(neskôr prípadne animácia chôdze – [DOPLNIŤ počet snímok]).
+
+**Malé predmety, ktoré už sú v hre:** železný kľúč, drevená kocka, plastová fľaša.
+Pripravujú sa aj oceľové mince (1, 2, 5 centov).
+
+### Kam ukladať a ako pomenovať
+Názvy súborov: **malé písmená, bez diakritiky a medzier, slová oddelené podčiarkovníkom** (`snake_case`).
+
+```
+art/
+  tiles/        floor.png, wall.png, abyss.png
+  objects/      box_wood.png, box_iron.png, box_magnet_s.png, box_magnet_j.png,
+                box_aluminium.png, box_copper.png, door_closed.png, door_open.png
+  characters/   kubo_up_right.png, kubo_down_right.png, kubo_down_left.png, kubo_up_left.png
+  items/        item_key.png, item_wood_cube.png, item_bottle.png, item_coin_1.png ...
+  portraits/    magneton_neutral.png, magneton_happy.png, magneton_surprised.png
+  ui/           glove_off.png, glove_s.png, glove_j.png, inventory_slot.png ...
+  placeholders/ dočasné obrázky – postupne ich nahradíte, potom sa zmažú
+```
+Ak nevieš, kam niečo patrí, opýtaj sa v chate. Obrázky do hry zapojí programátor
+(alebo stačí povedať, ktorý placeholder má nový obrázok nahradiť).
+
+### Odporúčanie: nainštalujte si Godot
+Stiahnite si **Godot 4.7.2** (pozri [Inštalácia](#inštalácia)) a otvorte projekt. Po uložení PNG do
+priečinka `art/` ho Godot sám načíta a uvidíte, ako kresba vyzerá v hre (F5).
+Godot pri tom vytvorí súbor `.import` (napr. `box_iron.png.import`) – ten **commitnite spolu s obrázkom**,
+ale nič v ňom neupravujte.
+
+### Zvuky
+- Formát **OGG** (hudba, dlhšie zvuky) alebo **WAV** (krátke efekty).
+- Priečinok `audio/`, pomenovanie tiež `snake_case` (napr. `glove_on.wav`, `door_open.ogg`).
+- Zoznam potrebných zvukov: [DOPLNIŤ]
+
+---
+
+## 6. Zdroje a licencie
+- Používame **len vlastné diela** alebo diela **voľne použiteľné** (ideálne licencia **CC0**).
+- Každý cudzí asset (obrázok, zvuk, písmo, hudba) **hneď zapíš do [`CREDITS.md`](CREDITS.md)**:
+  názov, autor, odkaz, licencia.
+- Nepoužívame obrázky z Google vyhľadávania ani nič, pri čom nevieme, kto je autor a aká je licencia.
+
+---
+
+## 7. Práca s Gitom a GitHubom
+
+### Pravidlá (pre všetkých)
+1. **Pred prácou vždy stiahni zmeny** (pull).
+2. **Po práci commit a push** – nenechávaj zmeny len u seba.
+3. **Malé commity s jasnou správou**, napr. `Pridana bedna box_iron.png` alebo `Level A2: rozmiestnenie objektov`.
+4. **Na jednej scéne `.tscn` naraz pracuje len jeden človek.** Kto ide upravovať scénu, napíše to
+   do chatu ([DOPLNIŤ – názov skupiny / kanála]) a po pushnutí ju „uvoľní“.
+5. **Nikdy necommituj priečinok `.godot/`** (je v `.gitignore`, Godot si ho vytvára sám).
+6. **Pri konflikte nič neprepisuj ani nemaž** – zastav sa a ozvi sa v chate, vyriešime to spolu.
+
+### Programátori – príkazy v termináli
+```
+git pull                         # stiahni zmeny ostatných (vždy pred prácou)
+git status                       # čo som zmenil
+git diff                         # ako presne som to zmenil
+git add scenes/objects/door.gd   # pridaj konkrétne súbory (alebo: git add .)
+git commit -m "Dvere: zvuk pri otvoreni"
+git push                         # pošli zmeny na GitHub
+```
+Pred `git add .` skontroluj `git status`, aby si necommitol niečo navyše.
+
+### Grafici – GitHub Desktop
+1. Nainštaluj **GitHub Desktop**: <https://desktop.github.com/> a prihlás sa svojím GitHub účtom.
+2. **File → Clone repository → URL** → `https://github.com/lofasada/Magnetolab.git` → vyber priečinok → **Clone**.
+3. **Pred prácou:** hore klikni **Fetch origin** a potom **Pull origin**.
+4. Ulož obrázky do správneho priečinka v `art/`.
+5. V GitHub Desktop vľavo uvidíš zmenené súbory. Dole napíš krátku správu (napr. `Pridane bedne`)
+   a klikni **Commit to main**.
+6. Hore klikni **Push origin**.
+7. Ak sa objaví hláška o **konflikte**, nič neklikaj „naslepo“ – napíš do chatu.
+
+---
+
+## 8. Použitie AI
+- Kód vzniká s pomocou nástroja **Claude Code** (AI asistent na programovanie).
+- **Každý člen musí rozumieť kódu, ktorý commitne** – na obhajobe ho musíme vedieť vysvetliť.
+- Kód od AI si pred commitom prečítaj, spusti hru a over, že funguje. Ak niečomu nerozumieš,
+  nechaj si to vysvetliť (alebo sa opýtaj kolegu) skôr, než to commitneš.
+- Fyzika v hre musí byť správna – ak AI navrhne niečo, čo nesedí s učivom, oprav to.
