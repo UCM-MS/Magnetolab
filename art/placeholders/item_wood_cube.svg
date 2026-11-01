@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <!-- Dočasná ikona: drevená kocka -->
+  <polygon points="16,6 27,11.5 16,17 5,11.5" fill="#c08a52"/>
+  <polygon points="5,11.5 16,17 16,28 5,22.5" fill="#9c6a38"/>
+  <polygon points="16,17 27,11.5 27,22.5 16,28" fill="#7a5129"/>
+</svg>

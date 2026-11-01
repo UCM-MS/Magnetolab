@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="DialogData" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialog_data.gd" id="1_dialog"]
+[ext_resource type="Script" path="res://scripts/dialog_page.gd" id="2_page"]
+
+[sub_resource type="Resource" id="Resource_p0"]
+script = ExtResource("2_page")
+title = "Miestnosť A1: Železo alebo nie?"
+text = "Ahoj, Kubo! Ja som profesor Magnetón. Vitaj v mojom laboratóriu!
+Nájdi kľúč a otvor dvere. Cestou zistíš, čo dokáže magnet."
+mood = 1
+
+[sub_resource type="Resource" id="Resource_p1"]
+script = ExtResource("2_page")
+title = "Ovládanie"
+text = "WASD alebo šípky – chôdza
+(prvé stlačenie ťa otočí, druhé urobí krok)
+E – použiť
+R – skúsiť miestnosť odznova
+
+Drevenú bedňu odtlačíš, keď do nej vojdeš."
+
+[resource]
+script = ExtResource("1_dialog")
+pages = Array[ExtResource("2_page")]([SubResource("Resource_p0"), SubResource("Resource_p1")])

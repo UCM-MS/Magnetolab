@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="UiTexts" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialog_data.gd" id="1_dialog"]
+[ext_resource type="Script" path="res://scripts/dialog_page.gd" id="2_page"]
+[ext_resource type="Script" path="res://scripts/ui_texts.gd" id="3_texts"]
+
+[sub_resource type="Resource" id="Resource_heavy_box_page"]
+script = ExtResource("2_page")
+text = "Uf, tá je príliš ťažká, Kubo! Rukou ju nepohneš. Skús magnet!"
+mood = 2
+
+[sub_resource type="Resource" id="Resource_heavy_box"]
+script = ExtResource("1_dialog")
+pages = Array[ExtResource("2_page")]([SubResource("Resource_heavy_box_page")])
+
+[sub_resource type="Resource" id="Resource_locked_door_page"]
+script = ExtResource("2_page")
+text = "Dvere sú zamknuté, Kubo. Najprv potrebuješ kľúč."
+
+[sub_resource type="Resource" id="Resource_locked_door"]
+script = ExtResource("1_dialog")
+pages = Array[ExtResource("2_page")]([SubResource("Resource_locked_door_page")])
+
+[resource]
+script = ExtResource("3_texts")
+heavy_box = SubResource("Resource_heavy_box")
+locked_door = SubResource("Resource_locked_door")

@@ -1,0 +1,79 @@
+[gd_scene format=4]
+
+[ext_resource type="Script" path="res://scripts/level.gd" id="1_level"]
+[ext_resource type="TileSet" path="res://resources/placeholder_tileset.tres" id="2_tiles"]
+[ext_resource type="PackedScene" path="res://scenes/objects/player.tscn" id="3_player"]
+[ext_resource type="PackedScene" path="res://scenes/objects/box.tscn" id="4_box"]
+[ext_resource type="PackedScene" path="res://scenes/objects/item.tscn" id="5_item"]
+[ext_resource type="Resource" path="res://resources/items/iron_key.tres" id="6_key"]
+[ext_resource type="Resource" path="res://resources/items/wood_cube.tres" id="7_cube"]
+[ext_resource type="Resource" path="res://resources/items/plastic_bottle.tres" id="8_bottle"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="9_hud"]
+[ext_resource type="PackedScene" path="res://scenes/objects/door.tscn" id="10_door"]
+[ext_resource type="PackedScene" path="res://scenes/objects/info_sign.tscn" id="11_sign"]
+[ext_resource type="PackedScene" path="res://scenes/objects/trigger_zone.tscn" id="12_trigger"]
+[ext_resource type="Resource" path="res://resources/level_a1/level_a1.tres" id="13_data"]
+[ext_resource type="Resource" path="res://resources/level_a1/dialog_intro.tres" id="14_intro"]
+[ext_resource type="Resource" path="res://resources/level_a1/dialog_room2.tres" id="15_room2"]
+[ext_resource type="Resource" path="res://resources/level_a1/dialog_sign.tres" id="16_sign_text"]
+
+[node name="LevelA1" type="Node2D" node_paths=PackedStringArray("room_layer", "player", "hud")]
+script = ExtResource("1_level")
+room_layer = NodePath("Room")
+player = NodePath("Objects/Player")
+hud = NodePath("HUD")
+level_data = ExtResource("13_data")
+
+[node name="Room" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAAAAAAAAAABAAAAAAABAAAAAAABAAAAAAACAAAAAAABAAAAAAADAAAAAAABAAAAAAAEAAAAAAABAAAAAAAFAAAAAAABAAAAAAAGAAAAAAABAAAAAAAHAAAAAAABAAAAAAAIAAAAAAABAAAAAAAJAAAAAAABAAAAAAAKAAAAAAABAAAAAAALAAAAAAABAAAAAAAMAAAAAAABAAAAAAANAAAAAAABAAAAAAAOAAAAAAABAAAAAAAAAAEAAAABAAAAAAABAAEAAAAAAAAAAAACAAEAAAAAAAAAAAADAAEAAAAAAAAAAAAEAAEAAAAAAAAAAAAFAAEAAAABAAAAAAAGAAEAAAAAAAAAAAAHAAEAAAAAAAAAAAAIAAEAAAAAAAAAAAAJAAEAAAAAAAAAAAAKAAEAAAABAAAAAAALAAEAAAABAAAAAAAMAAEAAAABAAAAAAANAAEAAAABAAAAAAAOAAEAAAABAAAAAAAAAAIAAAABAAAAAAABAAIAAAAAAAAAAAACAAIAAAAAAAAAAAADAAIAAAAAAAAAAAAEAAIAAAAAAAAAAAAFAAIAAAABAAAAAAAGAAIAAAAAAAAAAAAHAAIAAAAAAAAAAAAIAAIAAAAAAAAAAAAJAAIAAAAAAAAAAAAKAAIAAAACAAAAAAALAAIAAAACAAAAAAAMAAIAAAACAAAAAAANAAIAAAAAAAAAAAAOAAIAAAABAAAAAAAAAAMAAAABAAAAAAABAAMAAAAAAAAAAAACAAMAAAAAAAAAAAADAAMAAAAAAAAAAAAEAAMAAAAAAAAAAAAFAAMAAAAAAAAAAAAGAAMAAAAAAAAAAAAHAAMAAAAAAAAAAAAIAAMAAAAAAAAAAAAJAAMAAAAAAAAAAAAKAAMAAAACAAAAAAALAAMAAAACAAAAAAAMAAMAAAACAAAAAAANAAMAAAAAAAAAAAAOAAMAAAABAAAAAAAAAAQAAAABAAAAAAABAAQAAAAAAAAAAAACAAQAAAAAAAAAAAADAAQAAAAAAAAAAAAEAAQAAAAAAAAAAAAFAAQAAAABAAAAAAAGAAQAAAAAAAAAAAAHAAQAAAAAAAAAAAAIAAQAAAAAAAAAAAAJAAQAAAAAAAAAAAAKAAQAAAACAAAAAAALAAQAAAACAAAAAAAMAAQAAAACAAAAAAANAAQAAAAAAAAAAAAOAAQAAAABAAAAAAAAAAUAAAABAAAAAAABAAUAAAAAAAAAAAACAAUAAAAAAAAAAAADAAUAAAAAAAAAAAAEAAUAAAAAAAAAAAAFAAUAAAABAAAAAAAGAAUAAAAAAAAAAAAHAAUAAAAAAAAAAAAIAAUAAAAAAAAAAAAJAAUAAAAAAAAAAAAKAAUAAAABAAAAAAALAAUAAAABAAAAAAAMAAUAAAABAAAAAAANAAUAAAABAAAAAAAOAAUAAAABAAAAAAAAAAYAAAABAAAAAAABAAYAAAABAAAAAAACAAYAAAABAAAAAAADAAYAAAABAAAAAAAEAAYAAAABAAAAAAAFAAYAAAABAAAAAAAGAAYAAAABAAAAAAAHAAYAAAABAAAAAAAIAAYAAAAAAAAAAAAJAAYAAAABAAAAAAAKAAYAAAABAAAAAAALAAYAAAABAAAAAAAMAAYAAAABAAAAAAANAAYAAAABAAAAAAAOAAYAAAABAAAAAAAAAAcAAAABAAAAAAABAAcAAAABAAAAAAACAAcAAAABAAAAAAADAAcAAAABAAAAAAAEAAcAAAABAAAAAAAFAAcAAAABAAAAAAAGAAcAAAABAAAAAAAHAAcAAAABAAAAAAAIAAcAAAAAAAAAAAAJAAcAAAABAAAAAAAKAAcAAAABAAAAAAALAAcAAAABAAAAAAAMAAcAAAABAAAAAAANAAcAAAABAAAAAAAOAAcAAAABAAAAAAA=")
+tile_set = ExtResource("2_tiles")
+
+[node name="Objects" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="Player" parent="Objects" instance=ExtResource("3_player")]
+position = Vector2(-32, 80)
+
+[node name="WoodBox" parent="Objects" instance=ExtResource("4_box")]
+position = Vector2(96, 144)
+material_type = 1
+
+[node name="IronBox" parent="Objects" instance=ExtResource("4_box")]
+position = Vector2(96, 240)
+
+[node name="WoodCube" parent="Objects" instance=ExtResource("5_item")]
+position = Vector2(384, 256)
+data = ExtResource("7_cube")
+
+[node name="IronKey" parent="Objects" instance=ExtResource("5_item")]
+position = Vector2(352, 272)
+data = ExtResource("6_key")
+
+[node name="PlasticBottle" parent="Objects" instance=ExtResource("5_item")]
+position = Vector2(320, 288)
+data = ExtResource("8_bottle")
+
+[node name="Door" parent="Objects" instance=ExtResource("10_door")]
+position = Vector2(64, 256)
+
+[node name="Sign" parent="Objects" instance=ExtResource("11_sign")]
+position = Vector2(64, 64)
+dialog = ExtResource("16_sign_text")
+
+[node name="Triggers" type="Node2D" parent="."]
+
+[node name="IntroZone" parent="Triggers" instance=ExtResource("12_trigger")]
+position = Vector2(32, 48)
+size = Vector2i(4, 5)
+dialog = ExtResource("14_intro")
+
+[node name="Room2Zone" parent="Triggers" instance=ExtResource("12_trigger")]
+position = Vector2(192, 128)
+size = Vector2i(4, 5)
+dialog = ExtResource("15_room2")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(144.0, 184.0)
+zoom = Vector2(1.5, 1.5)
+
+[node name="HUD" parent="." instance=ExtResource("9_hud")]

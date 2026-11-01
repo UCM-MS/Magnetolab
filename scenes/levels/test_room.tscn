@@ -1,0 +1,52 @@
+[gd_scene format=4]
+
+[ext_resource type="Script" path="res://scripts/level.gd" id="1_level"]
+[ext_resource type="PackedScene" path="res://scenes/objects/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" path="res://scenes/objects/box.tscn" id="3_box"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="4_hud"]
+[ext_resource type="TileSet" path="res://resources/placeholder_tileset.tres" id="1_yv0av"]
+
+[node name="TestRoom" type="Node2D" unique_id=1014860550 node_paths=PackedStringArray("room_layer", "player", "hud")]
+script = ExtResource("1_level")
+room_layer = NodePath("Room")
+player = NodePath("Objects/Player")
+hud = NodePath("HUD")
+
+[node name="Room" type="TileMapLayer" parent="." unique_id=888608120]
+tile_map_data = PackedByteArray("AAAAAAAAAAABAAAAAAAAAAEAAAABAAAAAAAAAAIAAAABAAAAAAAAAAMAAAABAAAAAAAAAAQAAAABAAAAAAAAAAUAAAABAAAAAAAAAAYAAAABAAAAAAAAAAcAAAABAAAAAAABAAAAAAABAAAAAAABAAEAAAAAAAAAAAABAAIAAAAAAAAAAAABAAMAAAAAAAAAAAABAAQAAAAAAAAAAAABAAUAAAAAAAAAAAABAAYAAAAAAAAAAAABAAcAAAABAAAAAAACAAAAAAABAAAAAAACAAEAAAAAAAAAAAACAAIAAAAAAAAAAAACAAMAAAAAAAAAAAACAAQAAAAAAAAAAAACAAUAAAAAAAAAAAACAAYAAAAAAAAAAAACAAcAAAABAAAAAAADAAAAAAABAAAAAAADAAEAAAAAAAAAAAADAAIAAAAAAAAAAAADAAMAAAAAAAAAAAADAAQAAAAAAAAAAAADAAUAAAAAAAAAAAADAAYAAAAAAAAAAAADAAcAAAABAAAAAAAEAAAAAAABAAAAAAAEAAEAAAAAAAAAAAAEAAIAAAAAAAAAAAAEAAMAAAAAAAAAAAAEAAQAAAAAAAAAAAAEAAUAAAAAAAAAAAAEAAYAAAAAAAAAAAAEAAcAAAABAAAAAAAFAAAAAAABAAAAAAAFAAEAAAAAAAAAAAAFAAIAAAAAAAAAAAAFAAMAAAAAAAAAAAAFAAQAAAAAAAAAAAAFAAUAAAAAAAAAAAAFAAYAAAAAAAAAAAAFAAcAAAABAAAAAAAGAAAAAAABAAAAAAAGAAEAAAAAAAAAAAAGAAIAAAAAAAAAAAAGAAMAAAAAAAAAAAAGAAQAAAAAAAAAAAAGAAUAAAAAAAAAAAAGAAYAAAAAAAAAAAAGAAcAAAABAAAAAAAHAAAAAAABAAAAAAAHAAEAAAABAAAAAAAHAAIAAAABAAAAAAAHAAMAAAABAAAAAAAHAAQAAAABAAAAAAAHAAUAAAABAAAAAAAHAAYAAAABAAAAAAAHAAcAAAABAAAAAAA=")
+tile_set = ExtResource("1_yv0av")
+
+[node name="Objects" type="Node2D" parent="." unique_id=1099788992]
+y_sort_enabled = true
+
+[node name="Player" parent="Objects" instance=ExtResource("2_player")]
+position = Vector2(32, 48)
+
+[node name="IronBox" parent="Objects" instance=ExtResource("3_box")]
+position = Vector2(128, 96)
+
+[node name="WoodBox" parent="Objects" instance=ExtResource("3_box")]
+position = Vector2(-64, 96)
+material_type = 1
+
+[node name="AluminiumBox" parent="Objects" instance=ExtResource("3_box")]
+position = Vector2(96, 176)
+material_type = 2
+
+[node name="CopperBox" parent="Objects" instance=ExtResource("3_box")]
+position = Vector2(-32, 176)
+material_type = 3
+
+[node name="MagnetBoxS" parent="Objects" instance=ExtResource("3_box")]
+position = Vector2(32, 112)
+pole = 1
+
+[node name="MagnetBoxJ" parent="Objects" instance=ExtResource("3_box")]
+position = Vector2(32, 176)
+pole = 2
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1099788993]
+position = Vector2(32, 128)
+zoom = Vector2(2, 2)
+
+[node name="HUD" parent="." instance=ExtResource("4_hud")]
