@@ -6,8 +6,9 @@ extends PanelContainer
 
 ## Hráč odpovedal na otázku.
 signal question_answered(page: DialogPage, option_index: int)
+## Okno sa zatvorilo – dočítal sa posledný dialóg a žiadny ďalší nečaká.
+signal closed
 
-const OPTION_FONT_SIZE: int = 20
 ## Klávesy 1, 2, 3... vyberajú možnosti odpovede.
 const FIRST_OPTION_KEY: Key = KEY_1
 
@@ -53,6 +54,7 @@ func _start_next_dialog() -> void:
 	visible = not _queue.is_empty()
 	get_tree().paused = visible
 	if _queue.is_empty():
+		closed.emit()
 		return
 	_pages = _queue.pop_front().pages
 	_page_index = 0
@@ -77,7 +79,6 @@ func _create_option_button(index: int, option_text: String) -> Button:
 	var button := Button.new()
 	button.text = "%d) %s" % [index + 1, option_text]
 	button.focus_mode = Control.FOCUS_NONE # aby medzerník omylom nevybral odpoveď
-	button.add_theme_font_size_override("font_size", OPTION_FONT_SIZE)
 	button.pressed.connect(_choose_option.bind(index))
 	return button
 

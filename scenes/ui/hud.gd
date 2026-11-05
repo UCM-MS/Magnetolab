@@ -2,9 +2,13 @@ class_name Hud
 extends CanvasLayer
 ## HUD: inventár (sloty s ikonami predmetov) a dialógové okno profesora Magnetóna.
 
+## Hráč stlačil Esc – chce sa vrátiť do hlavného menu.
+signal menu_requested
+
 ## Veľkosť jedného slotu inventára (px).
 const SLOT_SIZE: Vector2 = Vector2(48, 48)
-const SLOT_STYLE: StyleBox = preload("res://scenes/ui/inventory_slot_style.tres")
+## Vzhľad slotu je v Theme (resources/ui_theme.tres) pod týmto názvom.
+const SLOT_THEME_TYPE: StringName = &"InventorySlot"
 
 ## Ikony v slotoch (v poradí zľava).
 var _slot_icons: Array[TextureRect] = []
@@ -19,11 +23,18 @@ func _ready() -> void:
 	show_inventory([])
 
 
+## Esc riešime tu, lebo HUD beží stále – Esc tak funguje aj pri otvorenom dialógu,
+## keď je zvyšok hry pozastavený.
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed(&"ui_cancel"):
+		menu_requested.emit()
+
+
 ## Prázdny slot: rámček s miestom na ikonu.
 func _create_slot() -> Control:
 	var slot := PanelContainer.new()
 	slot.custom_minimum_size = SLOT_SIZE
-	slot.add_theme_stylebox_override("panel", SLOT_STYLE)
+	slot.theme_type_variation = SLOT_THEME_TYPE
 	var icon := TextureRect.new()
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED

@@ -43,7 +43,10 @@ dáva nápovedy a vysvetľuje, čo Kubo zistil. Na konci sa Kubo zobudí a píš
 - **Dialógové okno** s portrétom Magnetóna (neutral / happy / surprised), otázky s možnosťami (1–3 alebo myš).
 - **HUD** s panelom inventára.
 - **Level A1 „Železo alebo nie?“** – celý bádateľský postup (otázka, spätná väzba po pokuse, kartička po otvorení dverí).
-- **R** = reštart miestnosti.
+- **R** = reštart miestnosti, **Esc** = späť do hlavného menu.
+- **Hlavné menu** – Pokračovať, Hrať (výber variantu), Výber miestnosti, Nastavenia, Autori, Ukončiť; ovláda sa myšou aj klávesnicou.
+- **Ukladanie** (`SaveManager`) – postup a nastavenia v `user://save.cfg`. Po dokončení A1 sa odomkne A2.
+- **Jednotný vzhľad UI** – `resources/ui_theme.tres`.
 - Grafika je zatiaľ **dočasná** (farebné tvary a placeholdery v `art/placeholders/`).
 
 ### 🔧 Robí sa
@@ -51,7 +54,7 @@ dáva nápovedy a vysvetľuje, čo Kubo zistil. Na konci sa Kubo zobudí a píš
 
 ### 📋 Ďalej
 1. **MVP – variant A:** miestnosti A2–A6, držanie pritiahnutej bedne rukavicou, tlačidlá na podlahe,
-   kompas, železné piliny, hlavné menu s výberom variantu, finálna grafika a zvuky, export do `.exe`.
+   kompas, železné piliny, pauza, finálna grafika a zvuky, export do `.exe`.
 2. **Plná verzia – variant B:** miestnosti B1–B7 (vodič s prúdom, vypínač, elektromagnety, pohyblivé platformy).
 3. **Bonusy:** strážny robot, denník bádateľa, cutscény, záverečný test.
 
@@ -93,7 +96,7 @@ git clone https://github.com/lofasada/Magnetolab.git
 ```
 1. Spusti Godot → **Import** → vyber súbor `project.godot` v naklonovanom priečinku → **Import & Edit**.
 2. Prvé otvorenie chvíľu trvá (Godot si vytvára priečinok `.godot/`).
-3. **F5** spustí hru (hlavná scéna je `scenes/levels/level_a1.tscn`), **F6** spustí práve otvorenú scénu.
+3. **F5** spustí hru (hlavná scéna je `scenes/ui/main_menu.tscn`), **F6** spustí práve otvorenú scénu.
 4. Po spustení skontroluj spodný panel **Output / Debugger** – nesmú tam byť chyby.
 
 ### Ovládanie v hre
@@ -106,9 +109,11 @@ git clone https://github.com/lofasada/Magnetolab.git
 | Enter | v dialógu pokračovať |
 | 1–3 | výber odpovede |
 | R | reštart miestnosti |
+| Esc | späť do hlavného menu |
+| Šípky + Enter | ovládanie menu (funguje aj myš) |
 
 ### Čo si prečítať ako prvé
-1. **`CLAUDE.md`** – pravidlá hry, fyziky a kódu. Je to hlavný návod projektu (aj pre Claude Code).
+1. **`CLAUDE.md`** – pravidlá hry, fyziky a kódu. Je to hlavný návod projektu (aj pre Claude Code). Berte na vedomie ze akekolvek AI co bude robit so subormi hry si musi preciotat Claude.md aby ju nerozbilo 
 2. **Architektúra mriežky** – hra nepoužíva fyzikálny engine. Každý objekt má pozíciu `Vector2i`
    (políčko), izometria je len vykreslenie. Pohyb je animovaný cez `Tween`.
 3. **`scripts/grid_manager.gd`** (autoload `GridManager`) – jediný zdroj pravdy: čo stojí na ktorom
@@ -118,6 +123,8 @@ git clone https://github.com/lofasada/Magnetolab.git
 5. **`scripts/level.gd`** (`Level`) – spoločný skript miestnosti: načíta mriežku, umiestni objekty,
    pospája signály (inventár → HUD, dvere → kartička, bádateľský postup).
 6. **`scripts/magnetism.gd`** – všetky fyzikálne pravidlá magnetizmu na jednom mieste.
+7. **`scripts/save_manager.gd`** (autoload `SaveManager`) – postup hráča a nastavenia v `user://save.cfg`.
+8. **`scenes/ui/main_menu.gd`** – hlavné menu, podobrazovky sú panely v jednej scéne.
 
 ### Štruktúra priečinkov
 ```
@@ -130,9 +137,21 @@ resources/      .tres – dáta: levely, dialógy, predmety, tileset, spoločné
 scenes/
   levels/       level_a1.tscn, test_room.tscn (skúšobná miestnosť)
   objects/      player, box, item, door, info_sign, trigger_zone (+ ich skripty .gd)
-  ui/           dialog_box, hud
-scripts/        spoločné skripty: GridManager, GridObject, Level, Magnetism, dátové triedy
+  ui/           main_menu, dialog_box, hud
+scripts/        spoločné skripty: GridManager, SaveManager, GridObject, Level, Magnetism, dátové triedy
 ```
+
+### Vzhľad UI (Theme)
+Vzhľad tlačidiel, panelov a textu je na jednom mieste, v `resources/ui_theme.tres`, a platí pre celú hru
+(`Project Settings → GUI → Theme → Custom`). Do scén preto nepíšeme vlastné farby ani štýly.
+
+Výmena dočasného vzhľadu za obrázky z `art/ui/`:
+1. Otvor `ui_theme.tres` a vyber štýl (napr. `Button → normal`).
+2. Namiesto `StyleBoxFlat` zvoľ **New StyleBoxTexture**, vlož obrázok a do `Texture Margins` zadaj veľkosť rohov.
+3. Do `Content Margins` zadaj rovnaké okraje textu, aké mal pôvodný štýl (tlačidlo: 16 a 8).
+
+Pri `focus` (výber klávesnicou) použi `button_hover.png` – kreslí sa cez bežné tlačidlo. Pozadie a nadpis
+sú v `main_menu.tscn` (`Background`, `Title`) a ikonu zámku nastavíš v `Lock Icon` na uzle `MainMenu`.
 
 ### Konvencie kódu
 - GDScript so **statickým typovaním**: `var speed: float = 2.0`, `func move(dir: Vector2i) -> void`.
@@ -153,9 +172,11 @@ scripts/        spoločné skripty: GridManager, GridObject, Level, Magnetism, d
    `Objects` (hráč a objekty, Y Sort), `Triggers`, `Camera2D`, `HUD`.
 3. V koreňovom uzle nastav v Inspectore `room_layer`, `player`, `hud` a `level_data`.
 4. Podlahu, steny a priepasti nakresli do `Room`; objekty vlož ako inštancie scén z `scenes/objects/`.
-5. Spusti scénu (F6) a skontroluj, či v konzole nie sú chyby.
+5. V `LevelData` nastav `next_level_id` (miestnosť, ktorá sa po dokončení odomkne). Výber miestnosti
+   hľadá scénu podľa názvu: `A2` → `scenes/levels/level_a2.tscn`.
+6. Spusti scénu (F6) a skontroluj, či v konzole nie sú chyby.
 
-Prechod medzi levelmi a výber variantu zatiaľ neexistujú. [DOPLNIŤ, keď budú hotové]
+Po otvorení dverí a zatvorení kartičky sa hráč vráti do menu. Priamy prechod do ďalšej miestnosti zatiaľ neexistuje. [DOPLNIŤ, keď bude hotový]
 
 ### Práca s Claude Code
 - Claude Code spúšťaj **v priečinku projektu** (tam, kde je `project.godot`), aby si načítal `CLAUDE.md`.
@@ -213,7 +234,7 @@ art/
   characters/   kubo_up_right.png, kubo_down_right.png, kubo_down_left.png, kubo_up_left.png
   items/        item_key.png, item_wood_cube.png, item_bottle.png, item_coin_1.png ...
   portraits/    magneton_neutral.png, magneton_happy.png, magneton_surprised.png
-  ui/           glove_off.png, glove_s.png, glove_j.png, inventory_slot.png ...
+  ui/           glove_off.png, glove_s.png, glove_j.png, inventory_slot.png, grafika menu (pozri nižšie) ...
   placeholders/ dočasné obrázky – postupne ich nahradíte, potom sa zmažú
 ```
 Ak nevieš, kam niečo patrí, opýtaj sa v chate. Obrázky do hry zapojí programátor
@@ -229,6 +250,79 @@ ale nič v ňom neupravujte.
 - Formát **OGG** (hudba, dlhšie zvuky) alebo **WAV** (krátke efekty).
 - Priečinok `audio/`, pomenovanie tiež `snake_case` (napr. `glove_on.wav`, `door_open.ogg`).
 - Zoznam potrebných zvukov: [DOPLNIŤ]
+
+---
+
+## Grafika menu
+
+Menu má zatiaľ dočasný vzhľad. Keď dodáte tieto súbory do `art/ui/`, programátor ich zapojí bez zmeny kódu.
+
+| Súbor | Čo to je | Odporúčaný rozmer | Poznámka |
+|---|---|---|---|
+| `menu_background.png` | pozadie menu | 1280 × 720 px | stred nechaj pokojný, budú na ňom tlačidlá |
+| `logo.png` | logo MagnetoLab | približne 640 × 200 px | priehľadné pozadie |
+| `button_normal.png` | tlačidlo – bežný stav | 64 × 64 px | NinePatch, rohy 16 px |
+| `button_hover.png` | tlačidlo – vybrané | 64 × 64 px | NinePatch, rohy 16 px |
+| `button_pressed.png` | tlačidlo – stlačené | 64 × 64 px | NinePatch, rohy 16 px |
+| `button_disabled.png` | tlačidlo – neaktívne | 64 × 64 px | NinePatch, rohy 16 px |
+| `panel.png` | panel / okno | 96 × 96 px | NinePatch, rohy 24 px |
+| `inventory_slot.png` | políčko inventára | 64 × 64 px | NinePatch, rohy 12 px |
+| `icon_lock.png` | ikona zámku na zamknutej miestnosti | 32 × 32 px | priehľadné pozadie |
+| `game_font.ttf` (alebo `.otf`) | písmo hry | – | musí mať slovenskú diakritiku (ľ, š, č, ť, ž, ý, á, í, é, ô, ä, ň, ď, ĺ, ŕ) |
+
+Ak písmo alebo iný súbor nie je vaše vlastné dielo, zapíšte ho do [`CREDITS.md`](CREDITS.md).
+
+### Ako kresliť tlačidlá a panely (NinePatch)
+
+Tlačidlá a panely v hre majú rôzne veľkosti (krátke „OK“, dlhé „Výber miestnosti“, veľké okno s textom). Aby sme nemuseli kresliť každé zvlášť, používame **NinePatch**: nakreslíš **jeden malý obrázok** a hra ho natiahne na akúkoľvek veľkosť bez toho, aby sa rozmazali rohy.
+
+Obrázok sa pomyselne rozdelí na **9 častí**:
+
+```
++------+----------------+------+
+| roh  |  horný okraj   | roh  |
++------+----------------+------+
+| ľavý |                | pravý|
+|okraj |     stred      |okraj |
++------+----------------+------+
+| roh  |  dolný okraj   | roh  |
++------+----------------+------+
+```
+
+- **Rohy** sa nikdy nenaťahujú, zostávajú presne tak, ako ich nakreslíš.
+- **Horný a dolný okraj** sa naťahujú len do šírky.
+- **Ľavý a pravý okraj** sa naťahujú len do výšky.
+- **Stred** sa naťahuje oboma smermi.
+
+#### Pravidlá kreslenia
+1. **Ozdoby a detaily patria len do rohov.** Čokoľvek v okrajoch alebo strede sa roztiahne a zdeformuje.
+2. **Okraje a stred musia byť jednoliate:** rovnaká farba alebo vzor, ktorý sa opakuje v smere naťahovania (žiadny prechod farieb z jednej strany na druhú, žiadne písmená ani ikony).
+3. **Všetky rohy rovnako veľké.** Odporúčame **16 px**. Ak potrebuješ inú veľkosť, napíš ju do tabuľky nižšie, programátor ju nastaví.
+4. **Text na tlačidlo nekresli**, ten dopĺňa hra (kvôli rôznym nápisom a jazykom).
+5. Formát **PNG s priehľadným pozadím**.
+
+#### Odporúčané rozmery
+
+| Prvok | Rozmer obrázka | Rohy |
+|---|---|---|
+| Tlačidlo | 64 × 64 px | 16 px |
+| Panel / okno (dialógy, nastavenia) | 96 × 96 px | 24 px |
+| Políčko inventára | 64 × 64 px | 12 px |
+
+#### Stavy tlačidla
+Každé tlačidlo potrebuje 4 verzie v **rovnakom rozmere a s rovnakými rohmi**:
+
+| Súbor | Kedy sa zobrazí |
+|---|---|
+| `button_normal.png` | bežný stav |
+| `button_hover.png` | myš je nad tlačidlom alebo je vybrané klávesnicou (napr. svetlejšie) |
+| `button_pressed.png` | tlačidlo je stlačené (napr. tmavšie, mierne „zatlačené“) |
+| `button_disabled.png` | tlačidlo nejde stlačiť (napr. sivé) |
+
+Všetko ukladaj do `art/ui/`.
+
+#### Ako si to vyskúšať (voliteľné)
+V Godote pridaj do akejkoľvek scény uzol **NinePatchRect**, vlož mu svoj obrázok do `Texture` a v `Patch Margin` nastav veľkosť rohov (napr. 16 na všetkých stranách). Potom ho ťahaj za okraje. Ak sa rohy nedeformujú a okraje vyzerajú dobre, obrázok je správne nakreslený.
 
 ---
 

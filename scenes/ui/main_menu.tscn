@@ -1,0 +1,280 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/main_menu.gd" id="1_menu"]
+[ext_resource type="Texture2D" path="res://art/placeholders/lock.svg" id="2_lock"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_menu")
+lock_icon = ExtResource("2_lock")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.07, 0.09, 0.13, 1)
+
+[node name="Layout" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 32.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="Layout"]
+layout_mode = 2
+theme_type_variation = &"MenuTitleLabel"
+text = "MagnetoLab"
+horizontal_alignment = 1
+
+[node name="Screens" type="CenterContainer" parent="Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MainPanel" type="PanelContainer" parent="Layout/Screens"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(480, 0)
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Layout/Screens/MainPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="Buttons" type="VBoxContainer" parent="Layout/Screens/MainPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ContinueButton" type="Button" parent="Layout/Screens/MainPanel/Margin/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Pokračovať"
+
+[node name="PlayButton" type="Button" parent="Layout/Screens/MainPanel/Margin/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Hrať"
+
+[node name="LevelsButton" type="Button" parent="Layout/Screens/MainPanel/Margin/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Výber miestnosti"
+
+[node name="SettingsButton" type="Button" parent="Layout/Screens/MainPanel/Margin/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Nastavenia"
+
+[node name="CreditsButton" type="Button" parent="Layout/Screens/MainPanel/Margin/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Autori"
+
+[node name="QuitButton" type="Button" parent="Layout/Screens/MainPanel/Margin/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Ukončiť"
+
+[node name="VariantPanel" type="PanelContainer" parent="Layout/Screens"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(560, 0)
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Layout/Screens/VariantPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="Content" type="VBoxContainer" parent="Layout/Screens/VariantPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Heading" type="Label" parent="Layout/Screens/VariantPanel/Margin/Content"]
+layout_mode = 2
+theme_type_variation = &"MenuHeadingLabel"
+text = "Vyber si variant"
+horizontal_alignment = 1
+
+[node name="YoungButton" type="Button" parent="Layout/Screens/VariantPanel/Margin/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Mladý bádateľ (4. ročník)"
+
+[node name="PhysicistButton" type="Button" parent="Layout/Screens/VariantPanel/Margin/Content"]
+layout_mode = 2
+focus_mode = 0
+disabled = true
+text = "Fyzik (9. ročník) – Pripravujeme"
+
+[node name="VariantBackButton" type="Button" parent="Layout/Screens/VariantPanel/Margin/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Späť"
+
+[node name="LevelPanel" type="PanelContainer" parent="Layout/Screens"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Layout/Screens/LevelPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="Content" type="VBoxContainer" parent="Layout/Screens/LevelPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Heading" type="Label" parent="Layout/Screens/LevelPanel/Margin/Content"]
+layout_mode = 2
+theme_type_variation = &"MenuHeadingLabel"
+text = "Výber miestnosti"
+horizontal_alignment = 1
+
+[node name="LevelGrid" type="GridContainer" parent="Layout/Screens/LevelPanel/Margin/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+columns = 3
+
+[node name="LevelNotice" type="Label" parent="Layout/Screens/LevelPanel/Margin/Content"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"HintLabel"
+text = "Táto miestnosť sa ešte pripravuje."
+horizontal_alignment = 1
+
+[node name="LevelBackButton" type="Button" parent="Layout/Screens/LevelPanel/Margin/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Späť"
+
+[node name="SettingsPanel" type="PanelContainer" parent="Layout/Screens"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(560, 0)
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Layout/Screens/SettingsPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="Content" type="VBoxContainer" parent="Layout/Screens/SettingsPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Heading" type="Label" parent="Layout/Screens/SettingsPanel/Margin/Content"]
+layout_mode = 2
+theme_type_variation = &"MenuHeadingLabel"
+text = "Nastavenia"
+horizontal_alignment = 1
+
+[node name="Volumes" type="GridContainer" parent="Layout/Screens/SettingsPanel/Margin/Content"]
+layout_mode = 2
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 16
+columns = 2
+
+[node name="MusicLabel" type="Label" parent="Layout/Screens/SettingsPanel/Margin/Content/Volumes"]
+layout_mode = 2
+text = "Hudba"
+
+[node name="MusicSlider" type="HSlider" parent="Layout/Screens/SettingsPanel/Margin/Content/Volumes"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.05
+value = 1.0
+
+[node name="SfxLabel" type="Label" parent="Layout/Screens/SettingsPanel/Margin/Content/Volumes"]
+layout_mode = 2
+text = "Zvukové efekty"
+
+[node name="SfxSlider" type="HSlider" parent="Layout/Screens/SettingsPanel/Margin/Content/Volumes"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.05
+value = 1.0
+
+[node name="FullscreenToggle" type="CheckButton" parent="Layout/Screens/SettingsPanel/Margin/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Celá obrazovka"
+
+[node name="SettingsBackButton" type="Button" parent="Layout/Screens/SettingsPanel/Margin/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Späť"
+
+[node name="CreditsPanel" type="PanelContainer" parent="Layout/Screens"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(560, 0)
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Layout/Screens/CreditsPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="Content" type="VBoxContainer" parent="Layout/Screens/CreditsPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Heading" type="Label" parent="Layout/Screens/CreditsPanel/Margin/Content"]
+layout_mode = 2
+theme_type_variation = &"MenuHeadingLabel"
+text = "Autori"
+horizontal_alignment = 1
+
+[node name="Team" type="Label" parent="Layout/Screens/CreditsPanel/Margin/Content"]
+layout_mode = 2
+text = "Programovanie: Lubo, Matej
+Grafika: Katka, Roberta
+
+Predmet Multimediálne systémy
+UCM Trnava"
+horizontal_alignment = 1
+
+[node name="Sources" type="Label" parent="Layout/Screens/CreditsPanel/Margin/Content"]
+layout_mode = 2
+theme_type_variation = &"HintLabel"
+text = "Zdroje sú v súbore CREDITS.md"
+horizontal_alignment = 1
+
+[node name="CreditsBackButton" type="Button" parent="Layout/Screens/CreditsPanel/Margin/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Späť"

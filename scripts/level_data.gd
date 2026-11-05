@@ -4,6 +4,8 @@ extends Resource
 ## Bádateľský postup: odhad (otázka v dialógu) -> pokus -> spätná väzba k tipu -> kartička.
 
 @export var level_name: String = ""
+## Miestnosť, ktorá sa odomkne po dokončení tejto (napr. "A2"); prázdne = žiadna.
+@export var next_level_id: String = ""
 ## Predmet, ktorého prvé pritiahnutie je „pokusom“ – vtedy príde spätná väzba k tipu.
 @export var guess_check_item: ItemData
 ## Spätná väzba podľa odpovede na otázku: index = číslo zvolenej možnosti (od 0).

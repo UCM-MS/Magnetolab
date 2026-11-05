@@ -26,6 +26,7 @@ mood = 1
 [resource]
 script = ExtResource("3_level")
 level_name = "Železo alebo nie?"
+next_level_id = "A2"
 guess_check_item = ExtResource("4_key")
 guess_feedback = Array[ExtResource("2_page")]([SubResource("Resource_feedback0"), SubResource("Resource_feedback1"), SubResource("Resource_feedback2")])
 info_card = SubResource("Resource_card")

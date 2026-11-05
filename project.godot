@@ -11,18 +11,25 @@ config_version=5
 [application]
 
 config/name="Magnetizmus"
-run/main_scene="res://scenes/levels/level_a1.tscn"
+run/main_scene="res://scenes/ui/main_menu.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
 GridManager="*res://scripts/grid_manager.gd"
+SaveManager="*res://scripts/save_manager.gd"
 
 [display]
 
+window/size/viewport_width=1280
+window/size/viewport_height=720
 window/stretch/mode="canvas_items"
-window/stretch/aspect="expand"
+window/stretch/aspect="keep"
+
+[gui]
+
+theme/custom="res://resources/ui_theme.tres"
 
 [input]
 

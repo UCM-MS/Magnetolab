@@ -120,7 +120,7 @@ väčšej zmene stručne vysvetli, čo a prečo si spravil.
     Krok vykoná, až keď sa už pozerá daným smerom.
   - Pri podržaní klávesu sa po otočení začne pohybovať po krátkej pauze (~0,15 s).
 - Medzerník – rukavica zap/vyp, Q – pól, E – interakcia (s objektom, na ktorý sa hráč pozerá),
-  R – reštart miestnosti
+  R – reštart miestnosti, Esc – späť do hlavného menu
 - V dialógu: E / Enter – pokračovať, 1–3 – výber odpovede
 
 ## Štruktúra priečinkov

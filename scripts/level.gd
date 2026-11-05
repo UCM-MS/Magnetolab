@@ -7,6 +7,7 @@ extends Node2D
 const UI_TEXTS: UiTexts = preload("res://resources/ui_texts.tres")
 ## Skupina objektov, ktoré vedia vyžiadať dialóg (spúšťacie oblasti, tabule).
 const DIALOG_SOURCES_GROUP: StringName = &"dialog_sources"
+const MAIN_MENU_SCENE: String = "res://scenes/ui/main_menu.tscn"
 
 ## Vrstva s podlahou, stenami a priepasťami (podľa príznakov dlaždíc).
 @export var room_layer: TileMapLayer
@@ -40,6 +41,7 @@ func _connect_signals() -> void:
 	player.inventory.changed.connect(hud.show_inventory)
 	player.inventory.item_added.connect(_on_item_added)
 	player.push_blocked.connect(_on_push_blocked)
+	hud.menu_requested.connect(_return_to_menu)
 	hud.dialog_box.question_answered.connect(_on_question_answered)
 	for source: Node in get_tree().get_nodes_in_group(DIALOG_SOURCES_GROUP):
 		source.dialog_requested.connect(hud.show_dialog)
@@ -69,5 +71,16 @@ func _on_item_added(item: ItemData) -> void:
 	hud.show_dialog(DialogData.from_page(level_data.guess_feedback[_guess_option]))
 
 
+## Otvorené dvere = dokončený level: odomkne sa ďalšia miestnosť, ukáže sa kartička
+## a po jej zatvorení sa hráč vráti do menu.
 func _on_door_opened() -> void:
+	if not level_data.next_level_id.is_empty():
+		SaveManager.unlock_level(level_data.next_level_id)
+	hud.dialog_box.closed.connect(_return_to_menu, CONNECT_ONE_SHOT)
 	hud.show_dialog(DialogData.from_page(level_data.info_card))
+
+
+## Scénu meníme až na konci snímku (call_deferred): volá sa to počas spracovania
+## klávesu a uzly, ktoré ho spracúvajú, musia dovtedy ostať v strome.
+func _return_to_menu() -> void:
+	get_tree().change_scene_to_file.call_deferred(MAIN_MENU_SCENE)
