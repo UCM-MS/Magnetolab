@@ -113,7 +113,7 @@ git clone https://github.com/lofasada/Magnetolab.git
 | Šípky + Enter | ovládanie menu (funguje aj myš) |
 
 ### Čo si prečítať ako prvé
-1. **`CLAUDE.md`** – pravidlá hry, fyziky a kódu. Je to hlavný návod projektu (aj pre Claude Code). Berte na vedomie ze akekolvek AI co bude robit so subormi hry si musi preciotat Claude.md aby ju nerozbilo 
+1. **Dokumentácia v Notione (GDD a TDD)** – pravidlá hry, fyziky a kódu. Pred zmenami v hernej logike si ju prečítaj.
 2. **Architektúra mriežky** – hra nepoužíva fyzikálny engine. Každý objekt má pozíciu `Vector2i`
    (políčko), izometria je len vykreslenie. Pohyb je animovaný cez `Tween`.
 3. **`scripts/grid_manager.gd`** (autoload `GridManager`) – jediný zdroj pravdy: čo stojí na ktorom
@@ -160,7 +160,7 @@ sú v `main_menu.tscn` (`Background`, `Title`) a ikonu zámku nastavíš v `Lock
 - `@export` pre veci, ktoré sa nastavujú v editore (materiál, pól...).
 - Objekty spolu komunikujú cez **signály**, nie cez pevné cesty k uzlom.
 - Texty pre hráča **nikdy natvrdo v kóde** – patria do `.tres` súborov.
-- Viac v `CLAUDE.md`.
+- Viac v TDD v Notione.
 
 ### Ako sa robí nový level
 1. Skopíruj priečinok dát (napr. `resources/level_a1/` → `resources/level_a2/`) a uprav texty:
@@ -178,9 +178,7 @@ sú v `main_menu.tscn` (`Background`, `Title`) a ikonu zámku nastavíš v `Lock
 
 Po otvorení dverí a zatvorení kartičky sa hráč vráti do menu. Priamy prechod do ďalšej miestnosti zatiaľ neexistuje. [DOPLNIŤ, keď bude hotový]
 
-### Práca s Claude Code
-- Claude Code spúšťaj **v priečinku projektu** (tam, kde je `project.godot`), aby si načítal `CLAUDE.md`.
-- `CLAUDE.md` je jeho návod – keď sa zmenia pravidlá hry, uprav ho, nech AI vie, ako sa má správať.
+### Práca s AI asistentom
 - Zadávaj malé kroky (jeden objekt / jedna funkcia), potom hru spusti a over.
 - Pred commitom si prečítaj, čo AI zmenila (`git diff`). Pozri aj časť [Použitie AI](#8-použitie-ai).
 
@@ -369,7 +367,7 @@ Pred `git add .` skontroluj `git status`, aby si necommitol niečo navyše.
 ---
 
 ## 8. Použitie AI
-- Kód vzniká s pomocou nástroja **Claude Code** (AI asistent na programovanie).
+- Pri programovaní môžeme používať AI asistenta.
 - **Každý člen musí rozumieť kódu, ktorý commitne** – na obhajobe ho musíme vedieť vysvetliť.
 - Kód od AI si pred commitom prečítaj, spusti hru a over, že funguje. Ak niečomu nerozumieš,
   nechaj si to vysvetliť (alebo sa opýtaj kolegu) skôr, než to commitneš.
