@@ -10,12 +10,19 @@ Náučná hra o magnetizme – tímová semestrálna práca z predmetu **Multime
 miestnosťami laboratória, v každej nájde kľúč a otvorí dvere. Hádanky sa riešia magnetmi –
 hlavne magnetickou rukavicou, ktorá priťahuje a odpudzuje predmety.
 
-Hra má dva varianty (vyberajú sa na začiatku hry):
+Hra je určená pre **4. ročník ZŠ, prírodoveda** (tematický celok *Neživá príroda a skúmanie
+prírodných javov*). Pokrýva celý výkonový štandard podľa inovovaného ŠVP – každý bod má vlastnú
+miestnosť a otázku v záverečnom teste:
 
-| Variant | Pre koho | Témy |
+| # | Žiak na konci 4. ročníka vie / dokáže | Miestnosť |
 |---|---|---|
-| **A** | 4. ročník ZŠ, prírodoveda | čo magnet priťahuje, póly, magnetické pole, kompas |
-| **B** | 9. ročník ZŠ, fyzika | Zem ako magnet, pole vodiča a cievky s prúdom, elektromagnet |
+| 1 | že magnet je predmet, ktorý priťahuje niektoré kovové predmety a nepriťahuje žiadne nekovové predmety | A1, A2 |
+| 2 | skúmaním zistiť, že magnet pôsobí do určitej vzdialenosti – má okolo seba tzv. magnetické pole | A4 |
+| 3 | navrhnúť postup, pomocou ktorého porovná veľkosť (odmeria) magnetického poľa dvoch magnetov | A5 |
+| 4 | vysvetliť, ako sa k sebe správajú dva magnety | A3 |
+| 5 | ako sa používa kompas | A6 |
+
+Obsahový štandard: magnet, magnetické pole, kompas. Podrobný návrh miestností je v GDD v Notione.
 
 V každej miestnosti sa postupuje ako vo vede: **odhadni → vyskúšaj → kartička „Čo si zistil“**.
 
@@ -53,10 +60,13 @@ dáva nápovedy a vysvetľuje, čo Kubo zistil. Na konci sa Kubo zobudí a píš
 - [DOPLNIŤ – čo sa práve robí, napr. podľa GitHub Issues]
 
 ### 📋 Ďalej
-1. **MVP – variant A:** miestnosti A2–A6, držanie pritiahnutej bedne rukavicou, tlačidlá na podlahe,
-   kompas, železné piliny, pauza, finálna grafika a zvuky, export do `.exe`.
-2. **Plná verzia – variant B:** miestnosti B1–B7 (vodič s prúdom, vypínač, elektromagnety, pohyblivé platformy).
-3. **Bonusy:** strážny robot, denník bádateľa, cutscény, záverečný test.
+1. **MVP:** miestnosti A2–A6 – A2 „Prekvapivé kovy“, A3 „Dva magnety“, A4 „Kam až siaha magnet?“,
+   A5 „Ktorý magnet je silnejší?“, A6 „Tmavá miestnosť s kompasom“; držanie pritiahnutej bedne rukavicou,
+   tlačidlá na podlahe, kompas, železné piliny, stupnica a železná sponka na meranie dosahu magnetu, pauza,
+   finálna grafika a zvuky, export do `.exe`. Z hlavného menu odstrániť výber variantu (hra je len pre 4. ročník).
+2. **Záverečný test** – otázka ku každému bodu výkonového štandardu (overenie učenia), úvodná a záverečná scéna,
+   testovanie s deťmi.
+3. **Bonusy:** strážny robot, denník bádateľa, cutscény.
 
 ---
 
@@ -69,7 +79,7 @@ dáva nápovedy a vysvetľuje, čo Kubo zistil. Na konci sa Kubo zobudí a píš
 | Katka | grafika | [DOPLNIŤ] |
 | Roberta | grafika | [DOPLNIŤ] |
 
-**Úlohy a chyby** evidujeme v **GitHub Issues**: <https://github.com/lofasada/Magnetolab/issues>
+**Úlohy a chyby** evidujeme v **GitHub Issues**: <https://github.com/UCM-MS/Magnetolab/issues>
 
 - Nová úloha alebo nájdená chyba = nový Issue (krátky názov, čo sa stalo, ako to zopakovať).
 - Kto na úlohe robí, priradí si ju (Assignees).
@@ -92,7 +102,7 @@ dáva nápovedy a vysvetľuje, čo Kubo zistil. Na konci sa Kubo zobudí a píš
 
 ### Naklonovanie a otvorenie
 ```
-git clone https://github.com/lofasada/Magnetolab.git
+git clone https://github.com/UCM-MS/Magnetolab.git
 ```
 1. Spusti Godot → **Import** → vyber súbor `project.godot` v naklonovanom priečinku → **Import & Edit**.
 2. Prvé otvorenie chvíľu trvá (Godot si vytvára priečinok `.godot/`).
@@ -356,7 +366,7 @@ Pred `git add .` skontroluj `git status`, aby si necommitol niečo navyše.
 
 ### Grafici – GitHub Desktop
 1. Nainštaluj **GitHub Desktop**: <https://desktop.github.com/> a prihlás sa svojím GitHub účtom.
-2. **File → Clone repository → URL** → `https://github.com/lofasada/Magnetolab.git` → vyber priečinok → **Clone**.
+2. **File → Clone repository → URL** → `https://github.com/UCM-MS/Magnetolab.git` → vyber priečinok → **Clone**.
 3. **Pred prácou:** hore klikni **Fetch origin** a potom **Pull origin**.
 4. Ulož obrázky do správneho priečinka v `art/`.
 5. V GitHub Desktop vľavo uvidíš zmenené súbory. Dole napíš krátku správu (napr. `Pridane bedne`)
