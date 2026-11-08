@@ -45,6 +45,11 @@ func world_to_cell(world_pos: Vector2) -> Vector2i:
 	return _layer.local_to_map(_layer.to_local(world_pos))
 
 
+## Veľkosť dlaždice v pixeloch (64 × 32) – podľa TileSetu aktuálnej miestnosti.
+func get_tile_size() -> Vector2i:
+	return _layer.tile_set.tile_size
+
+
 # --- Dotazy na mriežku ---
 
 ## Stena alebo políčko mimo mapy (zastaví lúč rukavice).
@@ -67,23 +72,45 @@ func is_free(cell: Vector2i) -> bool:
 
 
 ## Posledné voľné políčko, kam sa objekt dostane, keď ide zo `start` smerom `direction`
-## až po prekážku. Ak hneď vedľa je prekážka, vráti `start`.
-func find_slide_end(start: Vector2i, direction: Vector2i) -> Vector2i:
+## až po prekážku, ale najviac o `max_steps` políčok. Ak hneď vedľa je prekážka
+## (alebo max_steps je 0), vráti `start`.
+func find_slide_end(start: Vector2i, direction: Vector2i, max_steps: int) -> Vector2i:
 	var current: Vector2i = start
-	while is_free(current + direction):
+	for step: int in max_steps:
+		if not is_free(current + direction):
+			break
 		current += direction
 	return current
 
 
-## Prvý objekt v rade od `origin` smerom `direction` (samotné `origin` sa nepočíta).
-## Stena lúč zastaví – vtedy vráti null. Cez priepasť lúč prechádza.
-func find_first_object(origin: Vector2i, direction: Vector2i) -> GridObject:
-	var current: Vector2i = origin + direction
-	while not is_wall(current):
-		if _objects.has(current):
-			return _objects[current]
+## Vzdialenosť dvoch políčok v krokoch po mriežke (bez uhlopriečok).
+func cell_distance(a: Vector2i, b: Vector2i) -> int:
+	return absi(a.x - b.x) + absi(a.y - b.y)
+
+
+## Políčka, kam dosiahne lúč z `origin` smerom `direction` (najviac `max_distance` políčok).
+## Lúč zastaví stena (to políčko sa už nepočíta) alebo prvý objekt (jeho políčko sa počíta).
+## Cez priepasť lúč prechádza.
+func get_beam_cells(origin: Vector2i, direction: Vector2i, max_distance: int) -> Array[Vector2i]:
+	var cells: Array[Vector2i] = []
+	var current: Vector2i = origin
+	for step: int in max_distance:
 		current += direction
-	return null
+		if is_wall(current):
+			break
+		cells.append(current)
+		if _objects.has(current):
+			break
+	return cells
+
+
+## Prvý objekt v rade od `origin` smerom `direction`, najviac `max_distance` políčok ďaleko
+## (samotné `origin` sa nepočíta). Ak lúč zastaví stena alebo nič nenájde, vráti null.
+func find_first_object(origin: Vector2i, direction: Vector2i, max_distance: int) -> GridObject:
+	var cells: Array[Vector2i] = get_beam_cells(origin, direction, max_distance)
+	if cells.is_empty():
+		return null
+	return _objects.get(cells.back())
 
 
 # --- Zmeny obsadenosti ---

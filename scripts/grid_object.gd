@@ -5,6 +5,8 @@ extends Node2D
 
 ## Skupina, cez ktorú level na začiatku umiestni všetky objekty.
 const GROUP: StringName = &"grid_objects"
+## Trvanie posunu magnetom o jedno políčko (sekundy).
+const SLIDE_DURATION_PER_CELL: float = 0.08
 
 ## Aktuálne políčko. Mení ho len GridManager.
 var cell: Vector2i
@@ -39,3 +41,12 @@ func slide_to(target: Vector2i, duration: float) -> Tween:
 	_move_tween = create_tween()
 	_move_tween.tween_property(self, "global_position", GridManager.cell_to_world(target), duration)
 	return _move_tween
+
+
+## Posúva objekt daným smerom, kým nenarazí na prekážku, najviac o `max_steps` políčok
+## (používa rukavica aj magnet – magnet pôsobí len do určitej vzdialenosti).
+func slide_until_blocked(direction: Vector2i, max_steps: int) -> void:
+	var target: Vector2i = GridManager.find_slide_end(cell, direction, max_steps)
+	var distance: int = GridManager.cell_distance(cell, target)
+	if distance > 0:
+		slide_to(target, distance * SLIDE_DURATION_PER_CELL)

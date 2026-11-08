@@ -5,6 +5,11 @@ extends Node2D
 
 ## Rukavica pritiahla malý predmet (hráč si ho vezme do inventára).
 signal item_pulled(item: Item)
+## Zmenilo sa, kam siaha lúč (prázdne pole = rukavica je vypnutá). Počúva ho zvýraznenie dosahu.
+signal beam_changed(cells: Array[Vector2i], pole: Magnetism.Pole)
+
+## Dosah rukavice v políčkach. Objekt ďalej nereaguje.
+const GLOVE_RANGE: int = 4
 
 ## Poloha a veľkosť ikonky nad hlavou hráča.
 const ICON_OFFSET: Vector2 = Vector2(0, -38)
@@ -28,27 +33,41 @@ func switch_pole() -> void:
 	queue_redraw()
 
 
-## Zapnutá rukavica pôsobí z políčka `origin` smerom `direction` na PRVÝ objekt v rade.
-## O tom, či priťahuje alebo odpudzuje, rozhoduje Magnetism.force() (cez objekt).
+## Zapnutá rukavica pôsobí z políčka `origin` smerom `direction` na PRVÝ objekt v rade,
+## ale len do vzdialenosti GLOVE_RANGE. O tom, či priťahuje alebo odpudzuje,
+## rozhoduje Magnetism.force() (cez objekt).
 func act(origin: Vector2i, direction: Vector2i) -> void:
-	if not is_on:
-		return
-	var target: GridObject = GridManager.find_first_object(origin, direction)
-	if target is Box:
-		_act_on_box(target, direction)
-	elif target is Item:
-		_act_on_item(target)
-	# Iný objekt (dvere, tabuľa...) lúč zastaví a nič sa nestane.
+	if is_on:
+		var target: GridObject = GridManager.find_first_object(origin, direction, GLOVE_RANGE)
+		if target is Box:
+			_act_on_box(target, origin, direction)
+		elif target is Item:
+			_act_on_item(target)
+		# Iný objekt (dvere, tabuľa...) lúč zastaví a nič sa nestane.
+	# Lúč počítame až po pôsobení – pritiahnutá bedňa už stojí na novom mieste.
+	_update_beam(origin, direction)
 
 
-func _act_on_box(box: Box, direction: Vector2i) -> void:
+## Oznámi, kam teraz siaha lúč. Vypnutá rukavica nesiaha nikam.
+func _update_beam(origin: Vector2i, direction: Vector2i) -> void:
+	var cells: Array[Vector2i] = []
+	if is_on:
+		cells = GridManager.get_beam_cells(origin, direction, GLOVE_RANGE)
+	beam_changed.emit(cells, pole)
+
+
+## `origin` = políčko hráča. Z neho počítame, ako ďaleko je bedňa a kam až ju pole dosiahne.
+func _act_on_box(box: Box, origin: Vector2i, direction: Vector2i) -> void:
+	var distance: int = GridManager.cell_distance(origin, box.cell)
 	match box.get_magnetic_force(pole):
 		Magnetism.Force.ATTRACT:
 			# K hráčovi, kým nie je na susednom políčku alebo nenarazí.
-			box.slide_until_blocked(-direction)
+			# (distance - 1 krokov ju dovedie presne vedľa hráča.)
+			box.slide_until_blocked(-direction, distance - 1)
 		Magnetism.Force.REPEL:
-			# Od hráča, kým nenarazí na prekážku.
-			box.slide_until_blocked(direction)
+			# Od hráča, kým nenarazí na prekážku – ale najďalej na okraj dosahu rukavice.
+			# Za okrajom už pole nepôsobí, takže bedňa tam zastane.
+			box.slide_until_blocked(direction, GLOVE_RANGE - distance)
 		Magnetism.Force.NONE:
 			pass # nemagnetický materiál lúč zastaví, nič sa nestane
 

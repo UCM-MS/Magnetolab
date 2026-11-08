@@ -43,7 +43,9 @@ dáva nápovedy a vysvetľuje, čo Kubo zistil. Na konci sa Kubo zobudí a píš
 - **Bedne** podľa materiálu: drevo, železo, hliník, meď, plast; železná bedňa môže byť magnet s pólom S/J.
   Rukou sa dá tlačiť len drevená bedňa, pri kovovej Magnetón povie, že je príliš ťažká.
 - **Magnetická rukavica** – vypnutá / S / J (medzerník, Q). Pôsobí na prvý objekt v smere pohľadu,
-  priťahuje železo oboma pólmi, magnety priťahuje alebo odpudzuje podľa pólov.
+  priťahuje železo oboma pólmi, magnety priťahuje alebo odpudzuje podľa pólov. Dosah 4 políčka,
+  políčka v dosahu sa po zapnutí jemne zvýraznia.
+- **Magnet na podlahe** s nastaviteľným dosahom (pripravený pre A5).
 - **Malé predmety** (kľúč, drevená kocka, plastová fľaša) – železné preletia k hráčovi do **inventára (6 slotov)**.
 - **Priepasť** – nedá sa na ňu vstúpiť, lúč rukavice cez ňu prejde.
 - **Dvere s kľúčom** (E), **tabuľa** (E), **spúšťacie oblasti** (dialóg pri vstupe).
@@ -51,7 +53,7 @@ dáva nápovedy a vysvetľuje, čo Kubo zistil. Na konci sa Kubo zobudí a píš
 - **HUD** s panelom inventára.
 - **Level A1 „Železo alebo nie?“** – celý bádateľský postup (otázka, spätná väzba po pokuse, kartička po otvorení dverí).
 - **R** = reštart miestnosti, **Esc** = späť do hlavného menu.
-- **Hlavné menu** – Pokračovať, Hrať (výber variantu), Výber miestnosti, Nastavenia, Autori, Ukončiť; ovláda sa myšou aj klávesnicou.
+- **Hlavné menu** – Pokračovať, Hrať (spustí A1), Výber miestnosti, Nastavenia, Autori, Ukončiť; ovláda sa myšou aj klávesnicou.
 - **Ukladanie** (`SaveManager`) – postup a nastavenia v `user://save.cfg`. Po dokončení A1 sa odomkne A2.
 - **Jednotný vzhľad UI** – `resources/ui_theme.tres`.
 - Grafika je zatiaľ **dočasná** (farebné tvary a placeholdery v `art/placeholders/`).
@@ -63,7 +65,7 @@ dáva nápovedy a vysvetľuje, čo Kubo zistil. Na konci sa Kubo zobudí a píš
 1. **MVP:** miestnosti A2–A6 – A2 „Prekvapivé kovy“, A3 „Dva magnety“, A4 „Kam až siaha magnet?“,
    A5 „Ktorý magnet je silnejší?“, A6 „Tmavá miestnosť s kompasom“; držanie pritiahnutej bedne rukavicou,
    tlačidlá na podlahe, kompas, železné piliny, stupnica a železná sponka na meranie dosahu magnetu, pauza,
-   finálna grafika a zvuky, export do `.exe`. Z hlavného menu odstrániť výber variantu (hra je len pre 4. ročník).
+   finálna grafika a zvuky, export do `.exe`.
 2. **Záverečný test** – otázka ku každému bodu výkonového štandardu (overenie učenia), úvodná a záverečná scéna,
    testovanie s deťmi.
 3. **Bonusy:** strážny robot, denník bádateľa, cutscény.

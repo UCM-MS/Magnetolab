@@ -8,6 +8,8 @@ const UI_TEXTS: UiTexts = preload("res://resources/ui_texts.tres")
 ## Skupina objektov, ktoré vedia vyžiadať dialóg (spúšťacie oblasti, tabule).
 const DIALOG_SOURCES_GROUP: StringName = &"dialog_sources"
 const MAIN_MENU_SCENE: String = "res://scenes/ui/main_menu.tscn"
+## Zvýraznenie dosahu rukavice – level ho vloží sám, netreba ho pridávať do každej scény.
+const GLOVE_HIGHLIGHT_SCENE: PackedScene = preload("res://scenes/objects/glove_range_highlight.tscn")
 
 ## Vrstva s podlahou, stenami a priepasťami (podľa príznakov dlaždíc).
 @export var room_layer: TileMapLayer
@@ -25,6 +27,7 @@ var _guess_checked: bool = false
 
 
 func _ready() -> void:
+	_add_glove_highlight()
 	_connect_signals()
 	GridManager.setup(room_layer)
 	get_tree().call_group(GridObject.GROUP, "place_on_grid")
@@ -34,6 +37,14 @@ func _ready() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed(&"restart"):
 		get_tree().reload_current_scene()
+
+
+## Zvýraznenie vložíme hneď za vrstvu miestnosti: kreslí sa po podlahe,
+## ale pred objektmi, takže bedne a hráč sú vždy nad ním.
+func _add_glove_highlight() -> void:
+	var highlight: GloveRangeHighlight = GLOVE_HIGHLIGHT_SCENE.instantiate()
+	room_layer.add_sibling(highlight)
+	player.glove.beam_changed.connect(highlight.show_beam)
 
 
 ## Objekty o sebe nevedia – level ich signály napojí na HUD.

@@ -3,9 +3,6 @@ extends GridObject
 ## Bedňa. Rukou sa dá tlačiť len drevená (o 1 políčko). Kovové sú príliš ťažké:
 ## železné a magnetické hýbe len rukavica, hliníkové a medené sa nepohnú vôbec.
 
-## Trvanie posunu bedne o jedno políčko (sekundy).
-const SLIDE_DURATION_PER_CELL: float = 0.08
-
 ## Dočasné farby podľa materiálu (kým grafici nedodajú sprity).
 const MATERIAL_COLORS: Dictionary[Magnetism.MaterialType, Color] = {
 	Magnetism.MaterialType.IRON: Color(0.45, 0.49, 0.54),
@@ -38,14 +35,6 @@ func can_be_pushed() -> bool:
 ## Ako na bedňu pôsobí magnet s daným pólom (rozhoduje Magnetism).
 func get_magnetic_force(magnet_pole: Magnetism.Pole) -> Magnetism.Force:
 	return Magnetism.force(magnet_pole, material_type, pole)
-
-
-## Posúva bedňu daným smerom, kým nenarazí na prekážku.
-func slide_until_blocked(direction: Vector2i) -> void:
-	var target: Vector2i = GridManager.find_slide_end(cell, direction)
-	var distance: int = absi(target.x - cell.x) + absi(target.y - cell.y)
-	if distance > 0:
-		slide_to(target, distance * SLIDE_DURATION_PER_CELL)
 
 
 ## Prefarbí kocku podľa materiálu a zobrazí značku pólu.

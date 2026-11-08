@@ -13,11 +13,10 @@ const LEVEL_BUTTON_SIZE: Vector2 = Vector2(120, 64)
 @export var lock_icon: Texture2D
 
 @onready var _main_panel: Control = %MainPanel
-@onready var _variant_panel: Control = %VariantPanel
 @onready var _level_panel: Control = %LevelPanel
 @onready var _settings_panel: Control = %SettingsPanel
 @onready var _credits_panel: Control = %CreditsPanel
-@onready var _panels: Array[Control] = [_main_panel, _variant_panel, _level_panel, _settings_panel, _credits_panel]
+@onready var _panels: Array[Control] = [_main_panel, _level_panel, _settings_panel, _credits_panel]
 
 @onready var _continue_button: Button = %ContinueButton
 @onready var _level_grid: GridContainer = %LevelGrid
@@ -38,13 +37,12 @@ func _ready() -> void:
 ## Pospája tlačidlá s tým, čo majú urobiť. bind() odovzdá funkcii, ktorý panel má ukázať.
 func _connect_buttons() -> void:
 	_continue_button.pressed.connect(_on_continue_pressed)
-	%PlayButton.pressed.connect(_show_panel.bind(_variant_panel))
+	# Hra je len pre 4. ročník – Hrať spustí rovno prvú miestnosť.
+	%PlayButton.pressed.connect(_start_level.bind(SaveManager.FIRST_LEVEL_ID))
 	%LevelsButton.pressed.connect(_show_panel.bind(_level_panel))
 	%SettingsButton.pressed.connect(_show_panel.bind(_settings_panel))
 	%CreditsButton.pressed.connect(_show_panel.bind(_credits_panel))
 	%QuitButton.pressed.connect(_on_quit_pressed)
-	%YoungButton.pressed.connect(_start_level.bind(SaveManager.FIRST_LEVEL_ID))
-	%VariantBackButton.pressed.connect(_show_panel.bind(_main_panel))
 	%LevelBackButton.pressed.connect(_show_panel.bind(_main_panel))
 	%SettingsBackButton.pressed.connect(_show_panel.bind(_main_panel))
 	%CreditsBackButton.pressed.connect(_show_panel.bind(_main_panel))
@@ -82,8 +80,13 @@ func _find_first_active(parent: Node) -> Control:
 
 # --- Spustenie hry ---
 
+## Ak uložená miestnosť už neexistuje (napr. starý alebo poškodený súbor),
+## začneme radšej od prvej miestnosti, než aby hra skončila chybou.
 func _on_continue_pressed() -> void:
-	_start_level(SaveManager.last_level)
+	var id: String = SaveManager.last_level
+	if not ResourceLoader.exists(_level_scene_path(id)):
+		id = SaveManager.FIRST_LEVEL_ID
+	_start_level(id)
 
 
 func _start_level(id: String) -> void:

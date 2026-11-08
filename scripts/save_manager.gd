@@ -7,7 +7,6 @@ const SAVE_PATH: String = "user://save.cfg"
 ## Sekcie a kľúče v uloženom súbore.
 const SECTION_PROGRESS: String = "progress"
 const SECTION_SETTINGS: String = "settings"
-const KEY_VARIANT: String = "variant"
 const KEY_UNLOCKED_LEVELS: String = "unlocked_levels"
 const KEY_LAST_LEVEL: String = "last_level"
 const KEY_MUSIC_VOLUME: String = "music_volume"
@@ -21,8 +20,6 @@ const DEFAULT_VOLUME: float = 1.0
 const MUSIC_BUS: StringName = &"Music"
 const SFX_BUS: StringName = &"SFX"
 
-## Zvolený variant hry: "A" alebo "B" (prázdne = hráč ešte nehral).
-var variant: String = ""
 ## Identifikátory odomknutých miestností, napr. ["A1", "A2"].
 var unlocked_levels: PackedStringArray = [FIRST_LEVEL_ID]
 ## Posledná hraná miestnosť (prázdne = hráč ešte nehral).
@@ -48,7 +45,6 @@ func has_save() -> bool:
 ## Zapíše všetky údaje do súboru.
 func save_game() -> void:
 	var config := ConfigFile.new()
-	config.set_value(SECTION_PROGRESS, KEY_VARIANT, variant)
 	config.set_value(SECTION_PROGRESS, KEY_UNLOCKED_LEVELS, unlocked_levels)
 	config.set_value(SECTION_PROGRESS, KEY_LAST_LEVEL, last_level)
 	config.set_value(SECTION_SETTINGS, KEY_MUSIC_VOLUME, music_volume)
@@ -60,10 +56,11 @@ func save_game() -> void:
 
 
 ## Načíta údaje zo súboru a použije nastavenia. Bez súboru ostanú predvolené hodnoty.
+## Kľúče, ktoré už nepoužívame (napr. „variant“ zo starších verzií), sa jednoducho ignorujú
+## a pri najbližšom uložení zo súboru zmiznú.
 func load_game() -> void:
 	var config := ConfigFile.new()
 	if config.load(SAVE_PATH) == OK:
-		variant = config.get_value(SECTION_PROGRESS, KEY_VARIANT, "")
 		unlocked_levels = config.get_value(SECTION_PROGRESS, KEY_UNLOCKED_LEVELS, PackedStringArray([FIRST_LEVEL_ID]))
 		last_level = config.get_value(SECTION_PROGRESS, KEY_LAST_LEVEL, "")
 		music_volume = config.get_value(SECTION_SETTINGS, KEY_MUSIC_VOLUME, DEFAULT_VOLUME)
@@ -84,16 +81,14 @@ func is_level_unlocked(id: String) -> bool:
 	return unlocked_levels.has(id)
 
 
-## Hráč vstupuje do miestnosti: zapamätáme si ju aj jej variant (prvé písmeno, "A1" -> "A").
+## Hráč vstupuje do miestnosti: zapamätáme si ju (tlačidlo Pokračovať).
 func set_current_level(id: String) -> void:
 	last_level = id
-	variant = id.left(1)
 	save_game()
 
 
 ## Vymaže postup hráča. Nastavenia (hlasitosť, celá obrazovka) ostanú.
 func reset_progress() -> void:
-	variant = ""
 	unlocked_levels = [FIRST_LEVEL_ID]
 	last_level = ""
 	save_game()
