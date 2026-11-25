@@ -210,7 +210,7 @@ Po otvorení dverí a zatvorení kartičky sa hráč vráti do menu. Priamy prec
 | Čo | Rozmery | Pravidlá |
 |---|---|---|
 | **Dlaždice podlahy** | 64 × 32 px | kosoštvorec presne na hranu, vzor musí nadväzovať na susedné dlaždice |
-| **Steny** | šírka 64 px, výška [DOPLNIŤ] | zatiaľ je stena len plochá dlaždica; výšku a tvar steny dohodnúť |
+| **Steny** | 64 × 44 px | nízka kocka: vrch je kosoštvorec 64 × 32, boky vysoké 12 px; spodok sedí na políčku |
 | **Priepasť** | 64 × 32 px | musí byť jasne odlíšená od podlahy (hráč na ňu nemôže vstúpiť) |
 | **Bedne** | šírka do 64 px, výška [DOPLNIŤ] | stoja na jednom políčku, spodok sedí na kosoštvorci 64 × 32 |
 | **Kubo** | šírka do 64 px, výška [DOPLNIŤ] | 4 diagonálne smery (pozri nižšie) |
@@ -249,6 +249,14 @@ art/
 ```
 Ak nevieš, kam niečo patrí, opýtaj sa v chate. Obrázky do hry zapojí programátor
 (alebo stačí povedať, ktorý placeholder má nový obrázok nahradiť).
+
+**Dlaždice (`art/tiles/`) idú do hry cez atlas.** Hra nečíta `floor.png`, `wall.png`... priamo,
+ale jeden poskladaný obrázok `art/tiles/tileset_atlas.png`. Po zmene ktorejkoľvek dlaždice:
+1. v Godote otvor `tools/build_tileset_atlas.gd` a daj **File > Run** (atlas sa poskladá
+   a TileSet sa sám prispôsobí výške steny),
+2. commitni a pushni aj **`tileset_atlas.png`** (spolu s tvojimi obrázkami).
+
+Bedne a predmety (`art/objects/`, `art/items/`) sa načítajú priamo, tam to netreba.
 
 ### Odporúčanie: nainštalujte si Godot
 Stiahnite si **Godot 4.7.2** (pozri [Inštalácia](#inštalácia)) a otvorte projekt. Po uložení PNG do

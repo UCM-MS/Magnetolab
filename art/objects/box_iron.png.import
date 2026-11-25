@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bob35isdp5xpm"
-path="res://.godot/imported/tiles_placeholder.svg-27bba1cb78b02956b4af83eaabcb8cb8.ctex"
+uid="uid://dc6g8w6fai2lv"
+path="res://.godot/imported/box_iron.png-b18549e43a12c55486da04b9a79f0154.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/placeholders/tiles_placeholder.svg"
-dest_files=["res://.godot/imported/tiles_placeholder.svg-27bba1cb78b02956b4af83eaabcb8cb8.ctex"]
+source_file="res://art/objects/box_iron.png"
+dest_files=["res://.godot/imported/box_iron.png-b18549e43a12c55486da04b9a79f0154.ctex"]
 
 [params]
 
@@ -38,6 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false
