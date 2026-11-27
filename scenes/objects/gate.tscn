@@ -1,0 +1,51 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/objects/gate.gd" id="1_gate"]
+
+[node name="Gate" type="Node2D"]
+script = ExtResource("1_gate")
+
+[node name="OpenSlot" type="Polygon2D" parent="."]
+visible = false
+color = Color(0.12, 0.12, 0.14, 1)
+polygon = PackedVector2Array(-26, -14, 26, 12, 26, 14, -26, -12)
+
+[node name="Frame" type="Node2D" parent="."]
+
+[node name="PostLeft" type="Polygon2D" parent="Frame"]
+color = Color(0.25, 0.27, 0.3, 1)
+polygon = PackedVector2Array(-28, -14, -24, -12, -24, -46, -28, -48)
+
+[node name="PostRight" type="Polygon2D" parent="Frame"]
+color = Color(0.25, 0.27, 0.3, 1)
+polygon = PackedVector2Array(24, 12, 28, 14, 28, -20, 24, -22)
+
+[node name="Beam" type="Polygon2D" parent="Frame"]
+color = Color(0.25, 0.27, 0.3, 1)
+polygon = PackedVector2Array(-28, -48, 28, -20, 28, -15, -28, -43)
+
+[node name="Bars" type="Node2D" parent="."]
+
+[node name="Bar1" type="Polygon2D" parent="Bars"]
+color = Color(0.55, 0.58, 0.62, 1)
+polygon = PackedVector2Array(-21.5, -10.75, -18.5, -9.25, -18.5, -43.25, -21.5, -44.75)
+
+[node name="Bar2" type="Polygon2D" parent="Bars"]
+color = Color(0.55, 0.58, 0.62, 1)
+polygon = PackedVector2Array(-11.5, -5.75, -8.5, -4.25, -8.5, -38.25, -11.5, -39.75)
+
+[node name="Bar3" type="Polygon2D" parent="Bars"]
+color = Color(0.55, 0.58, 0.62, 1)
+polygon = PackedVector2Array(-1.5, -0.75, 1.5, 0.75, 1.5, -33.25, -1.5, -34.75)
+
+[node name="Bar4" type="Polygon2D" parent="Bars"]
+color = Color(0.55, 0.58, 0.62, 1)
+polygon = PackedVector2Array(8.5, 4.25, 11.5, 5.75, 11.5, -28.25, 8.5, -29.75)
+
+[node name="Bar5" type="Polygon2D" parent="Bars"]
+color = Color(0.55, 0.58, 0.62, 1)
+polygon = PackedVector2Array(18.5, 9.25, 21.5, 10.75, 21.5, -23.25, 18.5, -24.75)
+
+[node name="CrossBar" type="Polygon2D" parent="Bars"]
+color = Color(0.55, 0.58, 0.62, 1)
+polygon = PackedVector2Array(-26, -30, 26, -4, 26, -1, -26, -27)

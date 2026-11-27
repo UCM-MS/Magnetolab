@@ -24,6 +24,8 @@ var _heavy_hint_shown: bool = false
 var _guess_option: int = -1
 ## Spätná väzba k tipu sa ukáže len raz – po prvom pokuse.
 var _guess_checked: bool = false
+## Prvé zatvorenie mreže (neskôr k nemu Magnetón povie dialóg a_2_gate_closed).
+var _gate_closed_seen: bool = false
 
 
 func _ready() -> void:
@@ -60,6 +62,16 @@ func _connect_signals() -> void:
 		if node is Door:
 			node.locked_attempt.connect(hud.show_dialog.bind(UI_TEXTS.locked_door))
 			node.opened.connect(_on_door_opened)
+		elif node is Gate:
+			node.closed.connect(_on_gate_closed)
+	# Tlačidlo na podlahe -> mreža: stlačenie ju otvorí, pustenie zatvorí.
+	for node: Node in get_tree().get_nodes_in_group(PressurePlate.GROUP):
+		var plate: PressurePlate = node as PressurePlate
+		if plate.gate == null:
+			push_warning("%s: tlačidlo nemá nastavenú mrežu (gate)." % plate.name)
+			continue
+		plate.pressed.connect(plate.gate.open)
+		plate.released.connect(plate.gate.close)
 
 
 func _on_push_blocked(_box: Box) -> void:
@@ -80,6 +92,14 @@ func _on_item_added(item: ItemData) -> void:
 		return
 	_guess_checked = true
 	hud.show_dialog(DialogData.from_page(level_data.guess_feedback[_guess_option]))
+
+
+## Zatiaľ len zaznamenáme prvé zatvorenie mreže – dialóg a_2_gate_closed doplníme neskôr.
+func _on_gate_closed() -> void:
+	if _gate_closed_seen:
+		return
+	_gate_closed_seen = true
+	print("Mreža sa prvýkrát zatvorila (tu bude dialóg a_2_gate_closed).")
 
 
 ## Otvorené dvere = dokončený level: odomkne sa ďalšia miestnosť, ukáže sa kartička

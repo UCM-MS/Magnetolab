@@ -6,6 +6,9 @@ extends Node
 ## Objekt sa ocitol na políčku (pri štarte levelu aj po každom posune).
 ## Počúvajú ho napr. spúšťacie oblasti.
 signal object_entered_cell(obj: GridObject, cell: Vector2i)
+## Objekt opustil políčko (posun, odlet predmetu, pád do jamy, otvorenie dverí/mreže).
+## Počúvajú ho napr. tlačidlá na podlahe a mreže, ktoré čakajú na uvoľnenie políčka.
+signal object_left_cell(obj: GridObject, cell: Vector2i)
 
 ## Názvy vlastných vrstiev dát v TileSete.
 const SOLID_DATA: String = "solid"   # stena – nedá sa na ňu vstúpiť a zastaví lúč
@@ -150,6 +153,7 @@ func register_object(obj: GridObject, cell: Vector2i) -> void:
 func unregister_object(obj: GridObject) -> void:
 	if _objects.get(obj.cell) == obj:
 		_objects.erase(obj.cell)
+		object_left_cell.emit(obj, obj.cell)
 
 
 ## Presunie objekt v evidencii. Volajúci si má predtým overiť is_free() / can_slide_into().
