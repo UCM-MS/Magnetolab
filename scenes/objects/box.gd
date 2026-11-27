@@ -19,6 +19,11 @@ const MATERIAL_TEXTURES: Dictionary[Magnetism.MaterialType, Texture2D] = {
 }
 ## O koľko svetlejšie/tmavšie sú steny kocky oproti základnej farbe.
 const SHADE_AMOUNT: float = 0.2
+## Výška vrchu kocky nad stredom políčka (px) = o koľko bedňa v jame klesne, aby bol
+## jej vrch zarovno s podlahou. Obrázok od grafikov má kocku vyššiu než dočasné polygóny
+## (polygón Top v box.tscn má stred na y = -24).
+const SPRITE_TOP_HEIGHT: float = 32.0
+const POLYGON_TOP_HEIGHT: float = 24.0
 
 @export var material_type: Magnetism.MaterialType = Magnetism.MaterialType.IRON
 ## Pól, ktorý bedňa ukazuje k hráčovi. NONE = obyčajná bedňa, S/J = permanentný magnet.
@@ -36,6 +41,17 @@ func _ready() -> void:
 ## Rukou sa dá tlačiť len drevená bedňa – kovové sú príliš ťažké.
 func can_be_pushed() -> bool:
 	return material_type == Magnetism.MaterialType.WOOD
+
+
+## Bedňa, ktorá sa posunie na priepasť (rukavicou, magnetom aj rukou), do nej spadne
+## a vyplní ju – vznikne z nej podlaha (most).
+func can_fall_into_abyss() -> bool:
+	return true
+
+
+## Bedňa v jame klesne o celú výšku steny – podľa toho, či sa kreslí obrázok alebo polygóny.
+func get_fall_depth() -> float:
+	return SPRITE_TOP_HEIGHT if $Sprite2D.visible else POLYGON_TOP_HEIGHT
 
 
 ## Ako na bedňu pôsobí magnet s daným pólom (rozhoduje Magnetism).

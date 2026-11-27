@@ -133,6 +133,7 @@ func try_step(direction: Vector2i) -> void:
 
 ## Tlačenie rukou (ako Sokoban): bedňu na `target` posunie o 1 políčko, ak je za ňou voľno.
 ## Len drevené bedne; pri kovovej sa vyšle signál push_blocked (level ukáže hlášku).
+## Ak je za bedňou priepasť, bedňa do nej spadne a vyplní ju.
 func _try_push(target: Vector2i, direction: Vector2i) -> void:
 	var box: Box = GridManager.get_object_at(target) as Box
 	if box == null:
@@ -141,7 +142,7 @@ func _try_push(target: Vector2i, direction: Vector2i) -> void:
 		push_blocked.emit(box)
 		return
 	var behind: Vector2i = target + direction
-	if GridManager.is_free(behind):
+	if GridManager.can_slide_into(behind, box.can_fall_into_abyss()):
 		box.slide_to(behind, STEP_DURATION)
 
 

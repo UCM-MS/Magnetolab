@@ -45,6 +45,15 @@ func world_to_cell(world_pos: Vector2) -> Vector2i:
 	return _layer.local_to_map(_layer.to_local(world_pos))
 
 
+## Presunie uzol hneď za vrstvu dlaždíc: kreslí sa nad podlahou, ale pod zvýraznením
+## dosahu rukavice a pod všetkými objektmi (napr. bedňa, ktorá zapadla do jamy).
+## Poloha na obrazovke sa nezmení.
+func move_to_floor(node: Node2D) -> void:
+	var room: Node = _layer.get_parent()
+	node.reparent(room)
+	room.move_child(node, _layer.get_index() + 1)
+
+
 ## Veľkosť dlaždice v pixeloch (64 × 32) – podľa TileSetu aktuálnej miestnosti.
 func get_tile_size() -> Vector2i:
 	return _layer.tile_set.tile_size
@@ -66,20 +75,34 @@ func get_object_at(cell: Vector2i) -> GridObject:
 
 
 ## Dá sa na políčko vstúpiť alebo naň posunúť objekt? (podlaha a nič na nej nestojí)
-## Priepasť sem nepatrí – preto sa na ňu nedá vstúpiť ani do nej strčiť bedňu.
+## Priepasť sem nepatrí – hráč na ňu nevstúpi (bedňa do nej môže spadnúť, pozri can_slide_into).
 func is_free(cell: Vector2i) -> bool:
 	return _floor_cells.has(cell) and not _objects.has(cell)
 
 
-## Posledné voľné políčko, kam sa objekt dostane, keď ide zo `start` smerom `direction`
+## Dá sa objekt posunúť na políčko? Na voľnú podlahu áno. Na priepasť len objekt,
+## ktorý do nej spadne a vyplní ju (`falls_into_abyss` = bedňa) – nič nelevituje nad jamou.
+func can_slide_into(cell: Vector2i, falls_into_abyss: bool) -> bool:
+	if falls_into_abyss and is_abyss(cell):
+		return not _objects.has(cell)
+	return is_free(cell)
+
+
+## Posledné políčko, kam sa objekt dostane, keď ide zo `start` smerom `direction`
 ## až po prekážku, ale najviac o `max_steps` políčok. Ak hneď vedľa je prekážka
 ## (alebo max_steps je 0), vráti `start`.
-func find_slide_end(start: Vector2i, direction: Vector2i, max_steps: int) -> Vector2i:
+## Ak objekt do priepasti padá (`falls_into_abyss`), na políčko priepasti ešte vojde
+## a tam sa zastaví – ďalej už nejde. Inak ho okraj priepasti zastaví ako stena.
+func find_slide_end(start: Vector2i, direction: Vector2i, max_steps: int,
+		falls_into_abyss: bool = false) -> Vector2i:
 	var current: Vector2i = start
 	for step: int in max_steps:
-		if not is_free(current + direction):
+		var next: Vector2i = current + direction
+		if not can_slide_into(next, falls_into_abyss):
 			break
-		current += direction
+		current = next
+		if is_abyss(current):
+			break # spadol do jamy
 	return current
 
 
@@ -129,7 +152,19 @@ func unregister_object(obj: GridObject) -> void:
 		_objects.erase(obj.cell)
 
 
-## Presunie objekt v evidencii. Volajúci si má predtým overiť is_free().
+## Presunie objekt v evidencii. Volajúci si má predtým overiť is_free() / can_slide_into().
 func move_object(obj: GridObject, to: Vector2i) -> void:
 	unregister_object(obj)
 	register_object(obj, to)
+
+
+## Objekt spadol do priepasti a vyplnil ju: z políčka je odteraz podlaha (most).
+## Objekt v jame odhlásime z mriežky – políčko je voľné, dá sa po ňom chodiť
+## a lúč cez neho ide ako cez podlahu. Bedňa v jame už na nič nereaguje.
+## Dlaždice v TileMapLayer nemeníme, takže reštart (R) vráti jamu do pôvodného stavu.
+func fill_abyss(cell: Vector2i) -> void:
+	_abyss_cells.erase(cell)
+	_floor_cells[cell] = true
+	var obj: GridObject = _objects.get(cell)
+	if obj != null:
+		unregister_object(obj)
