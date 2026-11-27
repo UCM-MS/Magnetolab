@@ -7,7 +7,7 @@ extends RefCounted
 enum Pole { NONE, S, J }
 
 ## Materiály objektov. Nové pridávaj len na koniec (scény si pamätajú číslo).
-enum MaterialType { IRON, WOOD, ALUMINIUM, COPPER, PLASTIC }
+enum MaterialType { IRON, WOOD, ALUMINIUM, COPPER, PLASTIC, GOLD }
 
 ## Výsledok pôsobenia magnetu na objekt.
 enum Force { NONE, ATTRACT, REPEL }
@@ -20,7 +20,7 @@ const POLE_COLORS: Dictionary[Pole, Color] = {
 }
 
 
-## Na magnet reaguje len železo (oceľ). Drevo, plast, hliník ani meď nie.
+## Na magnet reaguje len železo (oceľ). Drevo, plast, hliník, meď ani zlato nie.
 static func is_magnetic(material: MaterialType) -> bool:
 	return material == MaterialType.IRON
 

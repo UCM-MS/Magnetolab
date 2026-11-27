@@ -5,6 +5,9 @@ extends Node2D
 
 ## Rukavica pritiahla malý predmet (hráč si ho vezme do inventára).
 signal item_pulled(item: Item)
+## Lúč zasiahol bedňu alebo predmet, na ktorý magnet nepôsobí (meď, hliník, drevo...).
+## Rukavica o dialógoch nevie – či a čo Magnetón povie, rozhodne level.
+signal no_effect(target: GridObject)
 ## Zmenilo sa, kam siaha lúč (prázdne pole = rukavica je vypnutá). Počúva ho zvýraznenie dosahu.
 signal beam_changed(cells: Array[Vector2i], pole: Magnetism.Pole)
 
@@ -69,7 +72,8 @@ func _act_on_box(box: Box, origin: Vector2i, direction: Vector2i) -> void:
 			# Za okrajom už pole nepôsobí, takže bedňa tam zastane.
 			box.slide_until_blocked(direction, GLOVE_RANGE - distance)
 		Magnetism.Force.NONE:
-			pass # nemagnetický materiál lúč zastaví, nič sa nestane
+			# Nemagnetický materiál lúč zastaví a nepohne sa – len to oznámime.
+			no_effect.emit(box)
 
 
 ## Malý predmet sa nehýbe po zemi – ak ho magnet priťahuje, oznámime to hráčovi.
@@ -77,6 +81,8 @@ func _act_on_box(box: Box, origin: Vector2i, direction: Vector2i) -> void:
 func _act_on_item(item: Item) -> void:
 	if item.get_magnetic_force(pole) == Magnetism.Force.ATTRACT:
 		item_pulled.emit(item)
+	else:
+		no_effect.emit(item)
 
 
 func _draw() -> void:

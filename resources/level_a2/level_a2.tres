@@ -1,0 +1,42 @@
+[gd_resource type="Resource" script_class="LevelData" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialog_page.gd" id="2_page"]
+[ext_resource type="Script" path="res://scripts/level_data.gd" id="3_level"]
+[ext_resource type="Script" path="res://scripts/dialog_data.gd" id="4_dialog"]
+[ext_resource type="Resource" path="res://resources/level_a2/dialog_react_aluminium.tres" id="5_react_aluminium"]
+[ext_resource type="Resource" path="res://resources/level_a2/dialog_react_copper.tres" id="6_react_copper"]
+[ext_resource type="Resource" path="res://resources/level_a2/dialog_react_gold.tres" id="7_react_gold"]
+[ext_resource type="Resource" path="res://resources/level_a2/dialog_gate_closed.tres" id="8_gate_closed"]
+
+[sub_resource type="Resource" id="Resource_feedback0"]
+script = ExtResource("2_page")
+text = "[Zlatá kocka sa nepohla – zlato magnet nepriťahuje. Na tlačidlo sa dostala železná kocka, lebo magnet priťahuje železo.]"
+
+[sub_resource type="Resource" id="Resource_feedback1"]
+script = ExtResource("2_page")
+text = "[Medená kocka sa nepohla – meď magnet nepriťahuje. Na tlačidlo sa dostala železná kocka, lebo magnet priťahuje železo.]"
+
+[sub_resource type="Resource" id="Resource_feedback2"]
+script = ExtResource("2_page")
+text = "[Správne, Kubo! Magnet priťahuje železo, preto sa železná kocka pohla až na tlačidlo.]"
+mood = 1
+
+[sub_resource type="Resource" id="Resource_card"]
+script = ExtResource("2_page")
+title = "Čo si zistil"
+text = "Magnet priťahuje len niektoré kovy. Nekovové predmety nepriťahuje nikdy."
+mood = 1
+
+[resource]
+script = ExtResource("3_level")
+level_name = "Prekvapivé kovy"
+next_level_id = "A3"
+guess_check = 1
+guess_feedback = Array[ExtResource("2_page")]([SubResource("Resource_feedback0"), SubResource("Resource_feedback1"), SubResource("Resource_feedback2")])
+material_reactions = Dictionary[int, ExtResource("4_dialog")]({
+2: ExtResource("5_react_aluminium"),
+3: ExtResource("6_react_copper"),
+5: ExtResource("7_react_gold")
+})
+gate_closed_dialog = ExtResource("8_gate_closed")
+info_card = SubResource("Resource_card")

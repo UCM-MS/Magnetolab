@@ -7,12 +7,49 @@
 [ext_resource type="TileSet" path="res://resources/placeholder_tileset.tres" id="1_yv0av"]
 [ext_resource type="PackedScene" path="res://scenes/objects/pressure_plate.tscn" id="5_plate"]
 [ext_resource type="PackedScene" path="res://scenes/objects/gate.tscn" id="6_gate"]
+[ext_resource type="Script" path="res://scripts/level_data.gd" id="7_level_data"]
+[ext_resource type="Script" path="res://scripts/dialog_data.gd" id="8_dialog"]
+[ext_resource type="Script" path="res://scripts/dialog_page.gd" id="9_page"]
+
+[sub_resource type="Resource" id="Resource_react_aluminium_page"]
+script = ExtResource("9_page")
+text = "[Hliník magnet nepriťahuje.]"
+
+[sub_resource type="Resource" id="Resource_react_aluminium"]
+script = ExtResource("8_dialog")
+pages = Array[ExtResource("9_page")]([SubResource("Resource_react_aluminium_page")])
+
+[sub_resource type="Resource" id="Resource_react_copper_page"]
+script = ExtResource("9_page")
+text = "[Meď magnet nepriťahuje.]"
+
+[sub_resource type="Resource" id="Resource_react_copper"]
+script = ExtResource("8_dialog")
+pages = Array[ExtResource("9_page")]([SubResource("Resource_react_copper_page")])
+
+[sub_resource type="Resource" id="Resource_react_gold_page"]
+script = ExtResource("9_page")
+text = "[Zlato magnet nepriťahuje.]"
+
+[sub_resource type="Resource" id="Resource_react_gold"]
+script = ExtResource("8_dialog")
+pages = Array[ExtResource("9_page")]([SubResource("Resource_react_gold_page")])
+
+[sub_resource type="Resource" id="Resource_test_level"]
+script = ExtResource("7_level_data")
+level_name = "Testovacia miestnosť"
+material_reactions = Dictionary[int, ExtResource("8_dialog")]({
+2: SubResource("Resource_react_aluminium"),
+3: SubResource("Resource_react_copper"),
+5: SubResource("Resource_react_gold")
+})
 
 [node name="TestRoom" type="Node2D" unique_id=1014860550 node_paths=PackedStringArray("room_layer", "player", "hud")]
 script = ExtResource("1_level")
 room_layer = NodePath("Room")
 player = NodePath("Objects/Player")
 hud = NodePath("HUD")
+level_data = SubResource("Resource_test_level")
 
 [node name="Room" type="TileMapLayer" parent="." unique_id=888608120]
 tile_map_data = PackedByteArray("AAAAAAAAAAABAAAAAAAAAAEAAAABAAAAAAAAAAIAAAABAAAAAAAAAAMAAAABAAAAAAAAAAQAAAABAAAAAAAAAAUAAAABAAAAAAAAAAYAAAABAAAAAAAAAAcAAAABAAAAAAABAAAAAAABAAAAAAABAAEAAAAAAAAAAAABAAIAAAAAAAAAAAABAAMAAAAAAAAAAAABAAQAAAAAAAAAAAABAAUAAAAAAAAAAAABAAYAAAAAAAAAAAABAAcAAAABAAAAAAACAAAAAAABAAAAAAACAAEAAAAAAAAAAAACAAIAAAAAAAAAAAACAAMAAAAAAAAAAAACAAQAAAAAAAAAAAACAAUAAAAAAAAAAAACAAYAAAAAAAAAAAACAAcAAAABAAAAAAADAAAAAAABAAAAAAADAAEAAAAAAAAAAAADAAIAAAAAAAAAAAADAAMAAAAAAAAAAAADAAQAAAAAAAAAAAADAAUAAAAAAAAAAAADAAYAAAAAAAAAAAADAAcAAAABAAAAAAAEAAAAAAABAAAAAAAEAAEAAAAAAAAAAAAEAAIAAAAAAAAAAAAEAAMAAAACAAAAAAAEAAQAAAAAAAAAAAAEAAUAAAAAAAAAAAAEAAYAAAAAAAAAAAAEAAcAAAABAAAAAAAFAAAAAAABAAAAAAAFAAEAAAAAAAAAAAAFAAIAAAAAAAAAAAAFAAMAAAAAAAAAAAAFAAQAAAAAAAAAAAAFAAUAAAAAAAAAAAAFAAYAAAAAAAAAAAAFAAcAAAABAAAAAAAGAAAAAAABAAAAAAAGAAEAAAAAAAAAAAAGAAIAAAAAAAAAAAAGAAMAAAAAAAAAAAAGAAQAAAAAAAAAAAAGAAUAAAAAAAAAAAAGAAYAAAAAAAAAAAAGAAcAAAABAAAAAAAHAAAAAAABAAAAAAAHAAEAAAABAAAAAAAHAAIAAAABAAAAAAAHAAMAAAABAAAAAAAHAAQAAAABAAAAAAAHAAUAAAABAAAAAAAHAAYAAAABAAAAAAAHAAcAAAABAAAAAAA=")
@@ -29,7 +66,7 @@ y_sort_enabled = true
 position = Vector2(32, 48)
 
 [node name="IronBox" parent="Objects" instance=ExtResource("3_box")]
-position = Vector2(128, 96)
+position = Vector2(0, 128)
 
 [node name="WoodBox" parent="Objects" instance=ExtResource("3_box")]
 position = Vector2(96, 144)
@@ -53,6 +90,25 @@ pole = 2
 
 [node name="Gate" parent="Objects" instance=ExtResource("6_gate")]
 position = Vector2(64, 64)
+
+[node name="SmallIron" parent="Objects" instance=ExtResource("3_box")]
+position = Vector2(192, 128)
+is_small = true
+
+[node name="SmallGold" parent="Objects" instance=ExtResource("3_box")]
+position = Vector2(-64, 96)
+material_type = 5
+is_small = true
+
+[node name="SmallCopper" parent="Objects" instance=ExtResource("3_box")]
+position = Vector2(-96, 112)
+material_type = 3
+is_small = true
+
+[node name="SmallAluminium" parent="Objects" instance=ExtResource("3_box")]
+position = Vector2(-128, 128)
+material_type = 2
+is_small = true
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1099788993]
 position = Vector2(32, 128)

@@ -1,7 +1,7 @@
 class_name Box
 extends GridObject
 ## Bedňa. Rukou sa dá tlačiť len drevená (o 1 políčko). Kovové sú príliš ťažké:
-## železné a magnetické hýbe len rukavica, hliníkové a medené sa nepohnú vôbec.
+## železné a magnetické hýbe len rukavica, hliníkové, medené a zlaté sa nepohnú vôbec.
 
 ## Dočasné farby podľa materiálu (kým grafici nedodajú sprity).
 const MATERIAL_COLORS: Dictionary[Magnetism.MaterialType, Color] = {
@@ -10,6 +10,7 @@ const MATERIAL_COLORS: Dictionary[Magnetism.MaterialType, Color] = {
 	Magnetism.MaterialType.ALUMINIUM: Color(0.85, 0.88, 0.93),
 	Magnetism.MaterialType.COPPER: Color(0.82, 0.46, 0.26),
 	Magnetism.MaterialType.PLASTIC: Color(0.55, 0.8, 0.9),
+	Magnetism.MaterialType.GOLD: Color("#e8c547"), # jasne žltá, aby sa nepomýlila s meďou
 }
 ## Obrázky od grafikov. Materiál, ktorý tu nie je (hliník, meď...), sa kreslí polygónmi.
 ## Stred políčka je v obrázku 64x64 na (32, 48), preto má Sprite2D v box.tscn offset (0, -16).
@@ -24,10 +25,16 @@ const SHADE_AMOUNT: float = 0.2
 ## (polygón Top v box.tscn má stred na y = -24).
 const SPRITE_TOP_HEIGHT: float = 32.0
 const POLYGON_TOP_HEIGHT: float = 24.0
+## Malá kocka = bedňa zmenšená na polovicu. Polygóny sa zmenšia okolo stredu políčka (0, 0),
+## takže kocka stojí na strede políčka.
+const SMALL_SCALE: float = 0.5
 
 @export var material_type: Magnetism.MaterialType = Magnetism.MaterialType.IRON
 ## Pól, ktorý bedňa ukazuje k hráčovi. NONE = obyčajná bedňa, S/J = permanentný magnet.
 @export var pole: Magnetism.Pole = Magnetism.Pole.NONE
+## Malá kocka: menší vzhľad, inak sa správa ako bedňa (padá do jamy, stláča tlačidlo,
+## kovová sa rukou nedá tlačiť).
+@export var is_small: bool = false
 
 
 func _ready() -> void:
@@ -49,9 +56,17 @@ func can_fall_into_abyss() -> bool:
 	return true
 
 
-## Bedňa v jame klesne o celú výšku steny – podľa toho, či sa kreslí obrázok alebo polygóny.
+## Bedňa v jame klesne o celú svoju výšku – podľa toho, či sa kreslí obrázok alebo polygóny
+## (malá kocka je nižšia, preto klesne menej).
 func get_fall_depth() -> float:
-	return SPRITE_TOP_HEIGHT if $Sprite2D.visible else POLYGON_TOP_HEIGHT
+	if $Sprite2D.visible:
+		return SPRITE_TOP_HEIGHT
+	return POLYGON_TOP_HEIGHT * _get_look_scale()
+
+
+## Zmenšenie vzhľadu: malá kocka je polovičná, bedňa v plnej veľkosti.
+func _get_look_scale() -> float:
+	return SMALL_SCALE if is_small else 1.0
 
 
 ## Ako na bedňu pôsobí magnet s daným pólom (rozhoduje Magnetism).
@@ -59,13 +74,17 @@ func get_magnetic_force(magnet_pole: Magnetism.Pole) -> Magnetism.Force:
 	return Magnetism.force(magnet_pole, material_type, pole)
 
 
-## Nastaví vzhľad bedne: obrázok, ak ho materiál má a bedňa nemá pól,
-## inak prefarbené polygóny. Zobrazí aj značku pólu.
+## Nastaví vzhľad bedne: obrázok, ak ho materiál má a bedňa nemá pól ani nie je malá,
+## inak prefarbené polygóny (malá kocka zmenšené). Zobrazí aj značku pólu.
 func _update_look() -> void:
 	var texture: Texture2D = MATERIAL_TEXTURES.get(material_type)
-	var use_sprite: bool = texture != null and pole == Magnetism.Pole.NONE
+	# Obrázok malej kocky zatiaľ nie je – kreslí sa polygónmi.
+	var use_sprite: bool = texture != null and pole == Magnetism.Pole.NONE and not is_small
 	$Sprite2D.texture = texture
 	$Sprite2D.visible = use_sprite
+	var look_scale: Vector2 = Vector2.ONE * _get_look_scale()
+	for face: Polygon2D in [$Left, $Right, $Top, $PoleMark]:
+		face.scale = look_scale
 	for face: Polygon2D in [$Left, $Right, $Top]:
 		face.visible = not use_sprite
 

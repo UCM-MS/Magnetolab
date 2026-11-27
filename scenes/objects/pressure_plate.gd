@@ -34,24 +34,25 @@ func _ready() -> void:
 ## Prichytí tlačidlo na stred políčka a presunie ho na úroveň podlahy,
 ## aby sa hráč aj bedne kreslili nad ním.
 func _place_on_floor() -> void:
-	global_position = GridManager.cell_to_world(_get_cell())
+	global_position = GridManager.cell_to_world(get_cell())
 	GridManager.move_to_floor(self)
 
 
-func _get_cell() -> Vector2i:
+## Políčko, na ktorom tlačidlo leží (level podľa neho zistí, čo ho stlačilo).
+func get_cell() -> Vector2i:
 	return GridManager.world_to_cell(global_position)
 
 
 ## Niečo vstúpilo na políčko alebo ho opustilo – ak je to naše políčko, prepočítame stav.
 func _on_cell_changed(_obj: GridObject, cell: Vector2i) -> void:
-	if cell == _get_cell():
+	if cell == get_cell():
 		_set_pressed(_is_pressed_now())
 
 
 ## Tlačidlo stlačí hráč alebo bedňa, ktorá na ňom stojí. Bedňa v jame je odhlásená
 ## z mriežky (get_object_at ju nevráti); kým na políčko len padá, je to ešte priepasť.
 func _is_pressed_now() -> bool:
-	var cell: Vector2i = _get_cell()
+	var cell: Vector2i = get_cell()
 	if GridManager.is_abyss(cell):
 		return false
 	var obj: GridObject = GridManager.get_object_at(cell)

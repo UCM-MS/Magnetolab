@@ -9,7 +9,10 @@ extends EditorScript
 ## Treba ho spustiť znova vždy, keď grafici zmenia niektorý obrázok dlaždice.
 ##
 ## Rozloženie atlasu (bunka = 64x32 px, vysoká dlaždica zaberie viac buniek pod sebou):
-##   (0,0) podlaha (floor_2.png)   (1,0) stena   (2,0) priepasť   (3,0) podlaha s magnetom
+##   (0,0) podlaha (floor_2.png)   (1,0) vysoká stena   (2,0) priepasť
+##   (3,0) podlaha s magnetom      (4,0) lem – nízka stena 64 x 40 (wall_low.png)
+##   Levely kreslia len vysokú stenu (1,0). Ktoré steny sa pri načítaní levelu vymenia
+##   za lem alebo sa nekreslia, rozhoduje level.gd (_choose_wall_looks).
 ##
 ## Ako sa počíta vysoká dlaždica (stena), napr. obrázok 64 x 44 px:
 ##   1. Počet buniek na výšku: rows = ceil(44 / 32) = 2  -> size_in_atlas = (1, 2).
@@ -29,12 +32,22 @@ const TILESET_PATH: String = "res://resources/placeholder_tileset.tres"
 ## Id zdroja (atlasu) v TileSete, ktorý levely používajú.
 const SOURCE_ID: int = 0
 ## Ktorý obrázok patrí na ktoré súradnice v atlase (horná bunka dlaždice).
-const TILES: Dictionary[String, Vector2i] = {
+## Nízka stena sa doplní v get_tiles() – podľa toho, či ju grafička už dodala.
+const FIXED_TILES: Dictionary[String, Vector2i] = {
 	"res://art/tiles/floor_2.png": Vector2i(0, 0),
 	"res://art/tiles/wall.png": Vector2i(1, 0),
 	"res://art/tiles/abyss.png": Vector2i(2, 0),
 	"res://art/tiles/floor.png": Vector2i(3, 0),
 }
+## Lem (nízka stena) 64 x 40 od grafičky.
+const LOW_WALL_PATH: String = "res://art/tiles/wall_low.png"
+## Dočasný lem vyrobený z wall.png (boky skrátené na 8 px a stmavené). Používa sa, kým
+## art/tiles/wall_low.png neexistuje. Keď ju grafička dodá, placeholder sa už nepoužije
+## a dá sa zmazať (aj s touto konštantou).
+const LOW_WALL_PLACEHOLDER_PATH: String = "res://art/placeholders/wall_low.png"
+const LOW_WALL_COORDS: Vector2i = Vector2i(4, 0)
+## Vlastná vrstva dát „solid“ – nízka stena je rovnako nepriechodná ako vysoká.
+const SOLID_DATA: String = "solid"
 
 
 func _run() -> void:
@@ -56,6 +69,17 @@ static func texture_origin_for_rows(rows: int) -> Vector2i:
 	return Vector2i(0, (rows - 1) * CELL_SIZE.y / 2)
 
 
+## Všetky dlaždice atlasu: pevné + nízka stena (od grafičky, ak existuje, inak placeholder).
+static func get_tiles() -> Dictionary[String, Vector2i]:
+	var tiles: Dictionary[String, Vector2i] = FIXED_TILES.duplicate()
+	var low_wall_path: String = LOW_WALL_PATH
+	if not FileAccess.file_exists(LOW_WALL_PATH):
+		low_wall_path = LOW_WALL_PLACEHOLDER_PATH
+		print("Atlas: %s zatiaľ nie je, použije sa %s" % [LOW_WALL_PATH, low_wall_path])
+	tiles[low_wall_path] = LOW_WALL_COORDS
+	return tiles
+
+
 ## Načíta obrázok dlaždice priamo z PNG (nie importovanú textúru, aby sa nestratila kvalita).
 static func load_tile(path: String) -> Image:
 	var tile: Image = Image.load_from_file(ProjectSettings.globalize_path(path))
@@ -71,14 +95,15 @@ static func load_tile(path: String) -> Image:
 
 ## Poskladá atlas a uloží ho. Je statická, aby sa dala zavolať aj mimo editora.
 static func build_atlas() -> Error:
+	var tile_coords: Dictionary[String, Vector2i] = get_tiles()
 	var tiles: Dictionary[String, Image] = {}
 	var atlas_cells: Vector2i = Vector2i.ZERO
-	for path: String in TILES:
+	for path: String in tile_coords:
 		var tile: Image = load_tile(path)
 		if tile == null:
 			return ERR_FILE_CANT_OPEN
 		tiles[path] = tile
-		var coords: Vector2i = TILES[path]
+		var coords: Vector2i = tile_coords[path]
 		atlas_cells.x = maxi(atlas_cells.x, coords.x + 1)
 		atlas_cells.y = maxi(atlas_cells.y, coords.y + rows_for_height(tile.get_height()))
 
@@ -89,7 +114,7 @@ static func build_atlas() -> Error:
 		var region_height: int = rows_for_height(tile.get_height()) * CELL_SIZE.y
 		# Zarovnanie nadol: prázdne miesto ostane nad obrázkom.
 		var top_gap: int = region_height - tile.get_height()
-		var destination: Vector2i = TILES[path] * CELL_SIZE + Vector2i(0, top_gap)
+		var destination: Vector2i = tile_coords[path] * CELL_SIZE + Vector2i(0, top_gap)
 		atlas.blit_rect(tile, Rect2i(Vector2i.ZERO, tile.get_size()), destination)
 
 	var error: Error = atlas.save_png(OUTPUT_PATH)
@@ -101,23 +126,32 @@ static func build_atlas() -> Error:
 
 
 ## Nastaví v TileSete veľkosť (size_in_atlas) a posun (texture_origin) každej dlaždice
-## podľa výšky jej obrázka a TileSet uloží. Custom data (solid, abyss) sa nemenia.
+## podľa výšky jej obrázka a TileSet uloží. Dlaždicu, ktorá v TileSete ešte nie je
+## (nízka stena), vytvorí. Custom data existujúcich dlaždíc (solid, abyss) sa nemenia.
 static func update_tileset() -> Error:
 	var tileset: TileSet = load(TILESET_PATH)
 	var source: TileSetAtlasSource = tileset.get_source(SOURCE_ID)
-	for path: String in TILES:
+	var tile_coords: Dictionary[String, Vector2i] = get_tiles()
+	for path: String in tile_coords:
 		var tile: Image = load_tile(path)
 		if tile == null:
 			return ERR_FILE_CANT_OPEN
-		var coords: Vector2i = TILES[path]
+		var coords: Vector2i = tile_coords[path]
 		var size: Vector2i = Vector2i(1, rows_for_height(tile.get_height()))
-		if source.get_tile_size_in_atlas(coords) != size:
+		if not source.has_tile(coords):
+			if not source.has_room_for_tile(coords, size, 1, Vector2i.ZERO, 1):
+				push_error("Atlas: dlaždica %s sa nezmestí (atlas ešte nie je naimportovaný?)" % coords)
+				return ERR_CANT_CREATE
+			source.create_tile(coords, size)
+		elif source.get_tile_size_in_atlas(coords) != size:
 			if not source.has_room_for_tile(coords, size, source.get_tile_animation_columns(coords),
 					source.get_tile_animation_separation(coords), 1, coords):
 				push_error("Atlas: dlaždica %s sa nezmestí (atlas ešte nie je naimportovaný?)" % coords)
 				return ERR_CANT_CREATE
 			source.move_tile_in_atlas(coords, coords, size)
 		source.get_tile_data(coords, 0).texture_origin = texture_origin_for_rows(size.y)
+	# Nízka stena je stena – nedá sa na ňu vstúpiť a zastaví lúč.
+	source.get_tile_data(LOW_WALL_COORDS, 0).set_custom_data(SOLID_DATA, true)
 	var error: Error = ResourceSaver.save(tileset, TILESET_PATH)
 	if error == OK:
 		print("TileSet uložený: %s" % TILESET_PATH)

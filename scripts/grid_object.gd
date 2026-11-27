@@ -3,6 +3,9 @@ extends Node2D
 ## Základ pre všetko, čo stojí na políčku mriežky (hráč, bedne, kľúče...).
 ## Pozíciu v editore stačí dať približne – pri štarte sa objekt prichytí na najbližšie políčko.
 
+## Posun objektu (slide_to) dobehol – objekt už stojí na novom políčku aj na obrazovke.
+signal slide_finished
+
 ## Skupina, cez ktorú level na začiatku umiestni všetky objekty.
 const GROUP: StringName = &"grid_objects"
 ## Trvanie posunu magnetom o jedno políčko (sekundy).
@@ -57,6 +60,7 @@ func slide_to(target: Vector2i, duration: float) -> Tween:
 		_move_tween.kill()
 	_move_tween = create_tween()
 	_move_tween.tween_property(self, "global_position", GridManager.cell_to_world(target), duration)
+	_move_tween.finished.connect(slide_finished.emit)
 	if falls:
 		_move_tween.finished.connect(_play_fall_animation)
 	return _move_tween
