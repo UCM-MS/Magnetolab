@@ -10,6 +10,8 @@ const DIALOG_SOURCES_GROUP: StringName = &"dialog_sources"
 const MAIN_MENU_SCENE: String = "res://scenes/ui/main_menu.tscn"
 ## Zvýraznenie dosahu rukavice – level ho vloží sám, netreba ho pridávať do každej scény.
 const GLOVE_HIGHLIGHT_SCENE: PackedScene = preload("res://scenes/objects/glove_range_highlight.tscn")
+## Steny na hranách (štýl The Sims) kreslí kód – len v leveloch s vrstvou wall_layer.
+const ROOM_WALLS_SCENE: PackedScene = preload("res://scenes/objects/room_walls.tscn")
 ## Steny v atlase (tools/build_tileset_atlas.gd): levely kreslia len vysokú stenu,
 ## pri načítaní sa podľa okolia zmení na lem (nízku stenu) alebo sa nekreslí vôbec.
 const TILE_SOURCE_ID: int = 0
@@ -55,7 +57,20 @@ func _ready() -> void:
 	_connect_signals()
 	_choose_wall_looks()
 	GridManager.setup(room_layer, wall_layer)
+	if wall_layer != null:
+		_add_room_walls()
 	get_tree().call_group(GridObject.GROUP, "place_on_grid")
+
+
+## Level s vrstvou značiek má steny na hranách: nakreslí ich RoomWalls podľa GridManagera.
+## Značky sú len pomôcka pre editor – v hre ich skryjeme. Uzol stien vložíme vedľa hráča
+## (do uzla s Y Sort), aby sa steny správne prekrývali s Kubom a bedňami.
+## Levely bez vrstvy (A1, A2) kreslia steny ešte postaru – dlaždicami.
+func _add_room_walls() -> void:
+	wall_layer.visible = false
+	var walls: RoomWalls = ROOM_WALLS_SCENE.instantiate()
+	player.add_sibling(walls)
+	walls.build()
 
 
 ## R = reštart miestnosti (načíta scénu znova od začiatku).

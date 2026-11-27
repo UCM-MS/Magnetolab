@@ -26,8 +26,9 @@ var _abyss_cells: Dictionary[Vector2i, bool] = {}
 ## Čo stojí na ktorom políčku (hráč, bedne...). Na jednom políčku max. jeden objekt.
 var _objects: Dictionary[Vector2i, GridObject] = {}
 ## Steny na hranách medzi dvoma susednými políčkami (štýl The Sims).
-## Kľúč hrany je súčet oboch políčok – pozri edge_key().
-var _walls: Dictionary[Vector2i, bool] = {}
+## Kľúč hrany je súčet oboch políčok – pozri edge_key(). Hodnota je jedno z políčok
+## (druhé = kľúč − hodnota), aby kreslenie stien vedelo, medzi ktorými políčkami stena stojí.
+var _walls: Dictionary[Vector2i, Vector2i] = {}
 
 
 ## Načíta miestnosť z TileMapLayer podľa príznakov dlaždíc „solid“ a „abyss“.
@@ -93,6 +94,13 @@ func is_open(cell: Vector2i) -> bool:
 	return _floor_cells.has(cell) or _abyss_cells.has(cell)
 
 
+## Všetky políčka miestnosti (podlaha + priepasť). Podľa nich sa dopočíta obvodová stena.
+func get_open_cells() -> Array[Vector2i]:
+	var cells: Array[Vector2i] = _floor_cells.keys()
+	cells.append_array(_abyss_cells.keys())
+	return cells
+
+
 func is_abyss(cell: Vector2i) -> bool:
 	return _abyss_cells.has(cell)
 
@@ -117,7 +125,13 @@ static func edge_key(a: Vector2i, b: Vector2i) -> Vector2i:
 
 ## Postaví stenu na hranu medzi susednými políčkami `a` a `b` (volá ju _load_walls).
 func add_wall(a: Vector2i, b: Vector2i) -> void:
-	_walls[edge_key(a, b)] = true
+	_walls[edge_key(a, b)] = a
+
+
+## Všetky nakreslené steny: kľúč hrany -> jedno z políčok (druhé políčko = kľúč − hodnota).
+## Kópia – kto ju dostane, nemôže zmeniť evidenciu stien. Používa ju kreslenie stien.
+func get_walls() -> Dictionary[Vector2i, Vector2i]:
+	return _walls.duplicate()
 
 
 ## Je medzi susednými políčkami `a` a `b` stena? Stena zastaví hráča, posun bedne aj lúč.
