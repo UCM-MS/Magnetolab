@@ -30,6 +30,9 @@ enum WallLook { HIGH, TRIM, HIDDEN }
 
 ## Vrstva s podlahou, stenami a priepasťami (podľa príznakov dlaždíc).
 @export var room_layer: TileMapLayer
+## Vrstva so značkami stien na hranách (resources/wall_edges_tileset.tres).
+## Nepovinná – level bez nej nemá žiadne steny na hranách.
+@export var wall_layer: TileMapLayer
 @export var player: Player
 @export var hud: Hud
 ## Údaje o leveli (spätná väzba k tipu, kartička „Čo si zistil“...).
@@ -51,7 +54,7 @@ func _ready() -> void:
 	_add_glove_highlight()
 	_connect_signals()
 	_choose_wall_looks()
-	GridManager.setup(room_layer)
+	GridManager.setup(room_layer, wall_layer)
 	get_tree().call_group(GridObject.GROUP, "place_on_grid")
 
 
@@ -63,7 +66,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 ## Každej stene vyberie vzhľad podľa okolia: vysoká zadná stena, lem alebo nič.
 ## Mení sa len kreslenie. Pre logiku ostáva každé z týchto políčok stenou: lem je
-## v TileSete „solid“ a zmazané políčko nie je podlaha ani priepasť (GridManager.is_wall).
+## v TileSete „solid“ a zmazané políčko nie je podlaha ani priepasť (GridManager.is_open vráti false).
 ## Pri reštarte (R) sa scéna načíta nanovo s vysokými stenami a výber prebehne znova.
 func _choose_wall_looks() -> void:
 	# Najprv rozhodneme o všetkých stenách, až potom meníme mapu – rozhodnutie

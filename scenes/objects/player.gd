@@ -73,7 +73,10 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 ## Interakcia s objektom na políčku, na ktoré sa hráč pozerá (dvere, tabuľa...).
+## Cez stenu sa nedá – tabuľa za priečkou nereaguje.
 func interact_ahead() -> void:
+	if GridManager.has_wall_between(cell, cell + facing):
+		return
 	var target: GridObject = GridManager.get_object_at(cell + facing)
 	if target != null:
 		target.interact(self)
@@ -118,11 +121,15 @@ func _read_input_direction() -> Vector2i:
 
 
 ## Otočí sa a ak je cieľové políčko voľné (alebo sa bedňa dá odtlačiť), prejde naň.
+## Stenu kontrolujeme ešte pred tlačením – inak by hráč odtlačil bedňu za stenou
+## (alebo by dostal hlášku o ťažkej bedni, na ktorú ani nedosiahne).
 func try_step(direction: Vector2i) -> void:
 	_set_facing(direction)
 	var target: Vector2i = cell + direction
+	if GridManager.has_wall_between(cell, target):
+		return
 	_try_push(target, direction)
-	if not GridManager.is_free(target):
+	if not GridManager.can_enter(cell, direction):
 		return
 	# Najprv sa zmení logika (okamžite), animácia ju len dobehne.
 	_is_moving = true
@@ -133,7 +140,7 @@ func try_step(direction: Vector2i) -> void:
 
 ## Tlačenie rukou (ako Sokoban): bedňu na `target` posunie o 1 políčko, ak je za ňou voľno.
 ## Len drevené bedne; pri kovovej sa vyšle signál push_blocked (level ukáže hlášku).
-## Ak je za bedňou priepasť, bedňa do nej spadne a vyplní ju.
+## Ak je za bedňou priepasť, bedňa do nej spadne a vyplní ju. Stena za bedňou ju zastaví.
 func _try_push(target: Vector2i, direction: Vector2i) -> void:
 	var box: Box = GridManager.get_object_at(target) as Box
 	if box == null:
@@ -141,9 +148,8 @@ func _try_push(target: Vector2i, direction: Vector2i) -> void:
 	if not box.can_be_pushed():
 		push_blocked.emit(box)
 		return
-	var behind: Vector2i = target + direction
-	if GridManager.can_slide_into(behind, box.can_fall_into_abyss()):
-		box.slide_to(behind, STEP_DURATION)
+	if GridManager.can_slide_into(target, direction, box.can_fall_into_abyss()):
+		box.slide_to(target + direction, STEP_DURATION)
 
 
 ## Uloží smer pohľadu a natočí šípku pod hráčom na obrazovke.

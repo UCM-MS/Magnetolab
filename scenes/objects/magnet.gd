@@ -45,9 +45,13 @@ func _is_plain_iron(target: GridObject) -> bool:
 
 
 ## Železo, ktoré už prilieplo k nejakému magnetu, ostane tam. Bez tejto kontroly by si
-## ho dva magnety mohli donekonečna preťahovať.
+## ho dva magnety mohli donekonečna preťahovať. Magnet za stenou sa nepočíta – cez stenu
+## jeho pole nedosiahne (rovnaké herné pravidlo ako pri lúči rukavice).
 func _is_held_by_magnet(target: GridObject) -> bool:
 	for direction: Vector2i in DIRECTIONS:
-		if GridManager.get_object_at(target.cell + direction) is Magnet:
+		var neighbor: Vector2i = target.cell + direction
+		if GridManager.has_wall_between(target.cell, neighbor):
+			continue
+		if GridManager.get_object_at(neighbor) is Magnet:
 			return true
 	return false
